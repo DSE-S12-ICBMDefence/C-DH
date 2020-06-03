@@ -35,7 +35,7 @@ def TransformationOrbitalEarth(yaw,pitch,roll):
                            [-np.sin(yaw),np.cos(yaw),0],
                            [0,0,1]])
 
-    Final_result= Trans_in_x*Trans_in_y*Trans_in_z
+    Final_result = Trans_in_x*Trans_in_y*Trans_in_z
     return Final_result
 
 def Transformation(lon,lat,yaw,pitch,roll):
