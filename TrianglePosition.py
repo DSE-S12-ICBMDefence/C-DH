@@ -1,7 +1,6 @@
 import numpy as np
 import math
 from Transformation import Transformation
-#hello
 '''
 INPUTS:
 Spacecraft 1 (S/C1)
@@ -76,14 +75,18 @@ n = np.cross(vector1,vector2)
 n1 = np.cross(vector1,n)
 n2 = np.cross(vector2,n)
 
+#Nearest point for the line of the S/C1
 point1 = spacecraftlocation1+(np.dot((spacecraftlocation2-spacecraftlocation1),n2)/np.dot(vector1,n2))*vector1
+
+#Nearest point for the line of the S/C2
 point2 = spacecraftlocation2+(np.dot((spacecraftlocation1-spacecraftlocation2),n1)/np.dot(vector2,n1))*vector2
 
-print(point1,point2)
-print(np.dot((spacecraftlocation1-spacecraftlocation2),n1)/np.dot(vector2,n1))
+#Printing the two points and the
+print("Point1: ",point1)
+print("Point2: ",point2)
 
 #Distance for Error
 n_normalized = n/np.linalg.norm(n)
 distance1 = np.abs(np.dot(n_normalized,(spacecraftlocation2-spacecraftlocation1)))
 distance2 = np.linalg.norm(point2-point1)
-print(distance1,distance2)
+print("Distance between Point1 and Point2: ",distance1,"or ",distance2)
