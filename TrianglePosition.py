@@ -28,14 +28,14 @@ radius = Re+h #Sum between earth radius and altitude
 
 #Longitude and latitude 
 lat1 = np.pi/2 #[rad]
-lon1 = 0 #[rad]
+lon1 = np.pi/4 #[rad]
 
 #S/C1 position in km
 spacecraftlocation1 = radius*np.array([np.cos(lon1)*np.cos(lat1),np.sin(lon1)*np.cos(lat1),np.sin(lat1)])
 print("S/C1 Location [km]: ",spacecraftlocation1)
 
 #Attutide angles
-yaw1 = 0 #[rad]
+yaw1 = -np.pi/4 #[rad]
 roll1 = 0 #[rad]
 pitch1 = np.pi #[rad]
 
@@ -55,16 +55,16 @@ print("Vector1 Attitude: ",vector1,'\n')
 
 #Longitude and latitude
 lat2 = np.pi/180*80 #[rad]
-lon2 = 0 #[rad]
+lon2 = np.pi/4 #[rad]
 
 #S/C2 position in km
 spacecraftlocation2 = radius*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np.cos(lat2),np.sin(lat2)])
 print("S/C2 Location [km]: ",spacecraftlocation2)
 
 #Attitude angles
-yaw2 = 0 #[rad]
+yaw2 = np.pi/4 #[rad]
 roll2 = 0 #[rad]
-pitch2 = np.pi/180*(90+18.32) #[rad] #Test 170deg
+pitch2 = np.pi/180*170 #(90+18.32) #[rad] #Test 170deg
 
 #Angles of the bright pixel in radians
 alpha2,beta2 = [0,0]
@@ -75,6 +75,10 @@ print("Vector2 Camera: ",v2)
 
 #Transformation of vector into Earth fixed coordinate system
 vector2 = np.dot(TransformationOrbitalEarth(yaw2,pitch2,roll2),v2)
+print("\n",TransformationOrbitalEarth(yaw2,pitch2,roll2),"\n")
+
+print("\n",TransformationOrbitalEarth(-yaw2,pitch2,roll2),"\n")
+
 print("Vector2 Attitude: ",vector2,'\n')
 
 print("Distance between location S/C1 and S/C2 [km]: ",np.linalg.norm(spacecraftlocation1-spacecraftlocation2),'\n')
@@ -102,4 +106,3 @@ print("Distance between Point1 and Point2 [km]: ",distance1,"or ",distance2,'\n'
 
 final_point = (point1+point2)/2
 
-print("Point [km]: ",final_point)
