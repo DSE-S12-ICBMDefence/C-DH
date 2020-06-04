@@ -18,8 +18,8 @@ I = np.array([[1/12*mass*(height**2+depth**2),0,0],   #Ixx
 #beta around x
 
 def AttitudeDeterminationTime(Ixx,Iyy,Torque,alpha,beta):
-    time1 = math.sqrt(4*alpha*Ixx/Torque)
-    time2 = math.sqrt(4*beta*Iyy/Torque)
+    time1 = math.sqrt(4*beta*Ixx/Torque)
+    time2 = math.sqrt(4*alpha*Iyy/Torque)
     time = time1 + time2
     return time
 
