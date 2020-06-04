@@ -27,9 +27,10 @@ area_solarpanel = 0.23 #[m^2]
 thickness_solarpanel = 3*10**(-3) #[m]
 height_solarpanel = area_solarpanel/2/width
 
-I_solarpanel = np.array([[1/12*mass*(height**2+depth**2)+1/12*mass_solarpanel*(height_solarpanel**2+thickness_solarpanel**2)+mass_solarpanel*((height_solarpanel/2+height/2)**2+(depth/2-thickness_solarpanel/2)**2),0,0],   #Ixx
-              [0,1/12*mass*(width**2+depth**2)+1/12*mass_solarpanel*(width**2+thickness_solarpanel**2)+mass_solarpanel*((depth/2-thickness_solarpanel/2)**2),0],    #Iyy
-              [0,0,1/12*mass*(width**2+height**2)+1/12*mass_solarpanel*(width**2+height_solarpanel**2)+mass_solarpanel*(height_solarpanel/2+height/2)**2]])  #Izz
+#Previous MOI 
+I_solarpanel = I+np.array([[1/12*mass_solarpanel*(height_solarpanel**2+thickness_solarpanel**2)+mass_solarpanel*((height_solarpanel/2+height/2)**2+(depth/2-thickness_solarpanel/2)**2),0,0],   #Ixx
+              [0,1/12*mass_solarpanel*(width**2+thickness_solarpanel**2)+mass_solarpanel*((depth/2-thickness_solarpanel/2)**2),0],    #Iyy
+              [0,0,1/12*mass_solarpanel*(width**2+height_solarpanel**2)+mass_solarpanel*(height_solarpanel/2+height/2)**2]])  #Izz
 
 print("MOI including solar arrays: ",I_solarpanel)
 
