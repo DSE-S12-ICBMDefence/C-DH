@@ -6,8 +6,8 @@ mass = 24 #[kg]
 
 #Dimensions of the 12U
 width = 23.94204 * 10**(-2) #[m]
-height = 36.3474 * 10**(-2) #[m]
-depth = 22.91334 * 10**(-2) #[m]
+height = 22.91334 * 10**(-2) #[m]
+depth = 36.3474 * 10**(-2) #[m]
 
 #Moments of inertia, assuming is symmetric
 I = np.array([[1/12*mass*(height**2+depth**2),0,0],   #Ixx
@@ -17,6 +17,7 @@ I = np.array([[1/12*mass*(height**2+depth**2),0,0],   #Ixx
 #alpha around y
 #beta around x
 
+#Determine the time sum of two attitude manouvres
 def AttitudeDeterminationTime(Ixx,Iyy,Torque,alpha,beta):
     time1 = math.sqrt(4*beta*Ixx/Torque)
     time2 = math.sqrt(4*alpha*Iyy/Torque)
@@ -25,8 +26,8 @@ def AttitudeDeterminationTime(Ixx,Iyy,Torque,alpha,beta):
 
 Ixx = I[0][0]
 Iyy = I[1][1]
-Torque = 0.25 #[Nm]
+Torque = 0.007 #[Nm]
 alpha = np.pi/180*20 #[rad]
-beta = np.pi/180*20 #[rad]
+beta = np.pi/180*50 #[rad]
 
 print(AttitudeDeterminationTime(Ixx,Iyy,Torque,alpha,beta))
