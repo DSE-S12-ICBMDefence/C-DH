@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from Transformation import Transformation
+from Transformation import TransformationOrbitalEarth
 '''
 INPUTS:
 Spacecraft 1 (S/C1)
@@ -31,7 +31,7 @@ lon1 = 0 #[rad]
 
 #S/C1 position in km
 spacecraftlocation1 = radius*np.array([np.cos(lon1)*np.cos(lat1),np.sin(lon1)*np.cos(lat1),np.sin(lat1)])
-print(spacecraftlocation1)
+print("S/C1 Location: ",spacecraftlocation1)
 
 #Attutide angles
 yaw1 = 0 #[rad]
@@ -43,12 +43,12 @@ alpha1,beta1 = [0,0]
 
 #Representation of vector in 3D using the two angles given (alpha and beta)
 v1 = np.array([np.sin(alpha1),np.cos(alpha1)*np.sin(beta1),np.cos(alpha1)*np.cos(beta1)])
-print(v1)
+print("Vector1 Camera:",v1)
 
 #Transformation of vector into Earth fixed coordinate system
-vector1 = np.dot(Transformation(yaw1,pitch1,roll1),v1)
+vector1 = np.dot(TransformationOrbitalEarth(yaw1,pitch1,roll1),v1)
 
-print(vector1)
+print("Vector1 Attitude:",vector1,'\n')
 
 ###S/C2###
 
@@ -58,24 +58,23 @@ lon2 = 0 #[rad]
 
 #S/C2 position in km
 spacecraftlocation2 = radius*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np.cos(lat2),np.sin(lat2)])
-
-print(spacecraftlocation2,np.linalg.norm(spacecraftlocation2-spacecraftlocation1))
+print("S/C2 Location: ",spacecraftlocation2)
 
 #Attitude angles
 yaw2 = 0 #[rad]
-roll2 = -np.pi/180*58 #[rad]
-pitch2 = np.pi #[rad]
+roll2 = 0 #[rad]
+pitch2 = np.pi/180*170 #[rad]
 
 #Angles of the bright pixel in radians
 alpha2,beta2 = [0,0]
 
 #Representation of vector in #D using the two angles given (alpha and beta)
 v2 = np.array([np.sin(alpha2),np.cos(alpha2)*np.sin(beta2),np.cos(alpha2)*np.cos(beta2)])
-print(v2)
+print("Vector2 Camera",v2)
 
 #Transformation of vector into Earth fixed coordinate system
-vector2 = np.dot(Transformation(yaw2,pitch2,roll2),v2)
-print(vector2)
+vector2 = np.dot(TransformationOrbitalEarth(yaw2,pitch2,roll2),v2)
+print("Vector2 Attitude",vector2,'\n')
 
 #Nearest points
 n = np.cross(vector1,vector2)
