@@ -38,5 +38,5 @@ def TransformationOrbitalEarth(yaw,pitch,roll):
     Final_result = Trans_in_x*Trans_in_y*Trans_in_z
     return Final_result
 
-def Transformation(lon,lat,yaw,pitch,roll):
-    return TransformationNadirEarth(lon,lat)*TransformationOrbitalEarth(yaw,pitch,roll)
+def Transformation(yaw,pitch,roll):
+    return TransformationOrbitalEarth(yaw,pitch,roll)

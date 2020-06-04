@@ -31,6 +31,7 @@ lon1 = 0 #[rad]
 
 #S/C1 position in km
 spacecraftlocation1 = radius*np.array([np.cos(lon1)*np.cos(lat1),np.sin(lon1)*np.cos(lat1),np.sin(lat1)])
+print(spacecraftlocation1)
 
 #Attutide angles
 yaw1 = 0 #[rad]
@@ -42,9 +43,11 @@ alpha1,beta1 = [0,0]
 
 #Representation of vector in 3D using the two angles given (alpha and beta)
 v1 = np.array([np.sin(alpha1),np.cos(alpha1)*np.sin(beta1),np.cos(alpha1)*np.cos(beta1)])
+print(v1)
 
 #Transformation of vector into Earth fixed coordinate system
-vector1 = np.diagonal(Transformation(lon1,lat1,yaw1,pitch1,roll1)*v1)
+vector1 = np.dot(Transformation(yaw1,pitch1,roll1),v1)
+
 print(vector1)
 
 ###S/C2###
@@ -52,7 +55,6 @@ print(vector1)
 #Longitude and latitude
 lat2 = np.pi/180*80 #[rad]
 lon2 = 0 #[rad]
-
 
 #S/C2 position in km
 spacecraftlocation2 = radius*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np.cos(lat2),np.sin(lat2)])
@@ -69,10 +71,11 @@ alpha2,beta2 = [0,0]
 
 #Representation of vector in #D using the two angles given (alpha and beta)
 v2 = np.array([np.sin(alpha2),np.cos(alpha2)*np.sin(beta2),np.cos(alpha2)*np.cos(beta2)])
+print(v2)
 
 #Transformation of vector into Earth fixed coordinate system
-vector2 = np.diagonal(Transformation(lon2,lat2,yaw2,pitch2,roll2)*v2)
-print(vector2,TransformationOrbitalEarth(yaw2,pitch2,roll2))
+vector2 = np.dot(Transformation(yaw2,pitch2,roll2),v2)
+print(vector2)
 
 #Nearest points
 n = np.cross(vector1,vector2)
