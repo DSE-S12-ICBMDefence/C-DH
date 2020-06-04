@@ -23,7 +23,6 @@ Distance: d
 h = 500 #[km]
 Re = 6378 #[km]
 radius = Re+h #Sum between earth radius and altitude
-factorsize = 15*10**(-3) #[km]
 
 ###S/C1###
 
@@ -78,7 +77,7 @@ print("Vector2 Camera: ",v2)
 vector2 = np.dot(TransformationOrbitalEarth(yaw2,pitch2,roll2),v2)
 print("Vector2 Attitude: ",vector2,'\n')
 
-print("Distance between location S/C1 and S/C2 [km]: ",np.linalg.norm(spacecraftlocation1-spacecraftlocation2))
+print("Distance between location S/C1 and S/C2 [km]: ",np.linalg.norm(spacecraftlocation1-spacecraftlocation2),'\n')
 
 #Nearest points
 n = np.cross(vector1,vector2)
