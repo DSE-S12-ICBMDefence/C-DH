@@ -4,17 +4,19 @@ from Transformation import TransformationOrbitalEarth
 '''
 INPUTS:
 Spacecraft 1 (S/C1)
-Attitude: yaw1, roll1, pitch1 [rad] #z,x,y
+Attitude: yaw1, roll1, pitch1 [rad] #Order Z->X->Y
 Position: x1. y1. z1 [km]
-Bright pixel: n [pixel position]
+Bright pixel: alpha1 (around y axis), beta1 (around x axis) [rad]
 
 Spacecraft 2 (S/C2)
 Attitude: yaw2, roll2, pitch2 
 Position: x2, y2, z2
-Bright pixel: m
+Bright pixel: alpha2 (around y axis), beta2 (around x axis) [rad]
 
 OUTPUTS:
-Position: xp, yp, zp
+Position1: xp1, yp1, zp1
+Position2: xp2, yp2, zp2
+Distance: d
 '''
 
 #Inputs for FOCUS payload
@@ -90,11 +92,15 @@ point1 = spacecraftlocation1+(np.dot((spacecraftlocation2-spacecraftlocation1),n
 point2 = spacecraftlocation2+(np.dot((spacecraftlocation1-spacecraftlocation2),n1)/np.dot(vector2,n1))*vector2
 
 #Printing the two points and the
-print("Point1: ",point1)
-print("Point2: ",point2)
+print("Point1 [km]: ",point1)
+print("Point2 [km]: ",point2)
 
 #Distance for Error
 n_normalized = n/np.linalg.norm(n)
 distance1 = np.abs(np.dot(n_normalized,(spacecraftlocation2-spacecraftlocation1)))
 distance2 = np.linalg.norm(point2-point1)
-print("Distance between Point1 and Point2 [km]: ",distance1,"or ",distance2)
+print("Distance between Point1 and Point2 [km]: ",distance1,"or ",distance2,'\n')
+
+final_point = (point1+point2)/2
+
+print("Point [km]: ",final_point)
