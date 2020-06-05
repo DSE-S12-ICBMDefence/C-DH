@@ -14,9 +14,11 @@ Position: x2, y2, z2
 Bright pixel: alpha2 (around y axis), beta2 (around x axis) [rad]
 
 OUTPUTS:
+Distance between Spacecraft1 and Spacecraft2: d
 Position1: xp1, yp1, zp1
 Position2: xp2, yp2, zp2
-Distance: d
+Distance between Position1 and Position2: d
+FinalPoint: xp, yp, zp 
 '''
 
 #Inputs for FOCUS payload
@@ -75,9 +77,6 @@ print("Vector2 Camera: ",v2)
 
 #Transformation of vector into Earth fixed coordinate system
 vector2 = np.dot(TransformationOrbitalEarth(yaw2,pitch2,roll2),v2)
-print("\n",TransformationOrbitalEarth(yaw2,pitch2,roll2),"\n")
-
-print("\n",TransformationOrbitalEarth(-yaw2,pitch2,roll2),"\n")
 
 print("Vector2 Attitude: ",vector2,'\n')
 
