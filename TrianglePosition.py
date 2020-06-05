@@ -28,14 +28,14 @@ radius = Re+h #Sum between earth radius and altitude
 
 #Longitude and latitude 
 lat1 = np.pi/2 #[rad]
-lon1 = np.pi/4 #[rad]
+lon1 = 0 #[rad]
 
 #S/C1 position in km
 spacecraftlocation1 = radius*np.array([np.cos(lon1)*np.cos(lat1),np.sin(lon1)*np.cos(lat1),np.sin(lat1)])
 print("S/C1 Location [km]: ",spacecraftlocation1)
 
 #Attutide angles
-yaw1 = -np.pi/4 #[rad]
+yaw1 = np.pi/4 #[rad]
 roll1 = 0 #[rad]
 pitch1 = np.pi #[rad]
 
@@ -54,7 +54,7 @@ print("Vector1 Attitude: ",vector1,'\n')
 ###S/C2###
 
 #Longitude and latitude
-lat2 = np.pi/180*80 #[rad]
+lat2 = 0 #[rad]
 lon2 = np.pi/4 #[rad]
 
 #S/C2 position in km
@@ -62,9 +62,9 @@ spacecraftlocation2 = radius*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np
 print("S/C2 Location [km]: ",spacecraftlocation2)
 
 #Attitude angles
-yaw2 = np.pi/4 #[rad]
-roll2 = 0 #[rad]
-pitch2 = np.pi/180*170 #(90+18.32) #[rad] #Test 170deg
+yaw2 = 0 #[rad]
+roll2 = -np.pi/2 #[rad]
+pitch2 = np.pi/4 #(90+18.32) #[rad] #Test 170deg
 
 #Angles of the bright pixel in radians
 alpha2,beta2 = [0,0]
@@ -105,4 +105,4 @@ distance2 = np.linalg.norm(point2-point1)
 print("Distance between Point1 and Point2 [km]: ",distance1,"or ",distance2,'\n')
 
 final_point = (point1+point2)/2
-
+print("Final Point [km]:",final_point)
