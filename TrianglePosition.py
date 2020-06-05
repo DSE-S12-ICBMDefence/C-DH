@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from Transformation import TransformationOrbitalEarth
+import time
 '''
 INPUTS:
 Spacecraft 1 (S/C1)
@@ -21,6 +22,7 @@ Distance between Position1 and Position2: d
 FinalPoint: xp, yp, zp 
 '''
 
+start_time = time.time()
 #Inputs for FOCUS payload
 h = 500 #[km]
 Re = 6378 #[km]
@@ -56,20 +58,20 @@ print("Vector1 Attitude: ",vector1,'\n')
 ###S/C2###
 
 #Longitude and latitude
-lat2 = np.pi/180*68 #[rad]
-lon2 = 0 #[rad]
+lat2 = np.pi/180*68.018 #[rad]
+lon2 = np.pi/2 #[rad]
 
 #S/C2 position in km
 spacecraftlocation2 = radius*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np.cos(lat2),np.sin(lat2)])
 print("S/C2 Location [km]: ",spacecraftlocation2)
 
 #Attitude angles
-yaw2 = 0 #[rad]
-roll2 = 0 #[rad]
-pitch2 = np.pi/180*(90+68) #(90+18.32) #[rad] #Test 170deg
+yaw2 = np.pi #[rad]
+roll2 = np.pi/180*(180-68.018) #[rad]
+pitch2 = 0 #(90+18.32) #[rad] #Test 170deg
 
 #Angles of the bright pixel in radians
-alpha2,beta2 = [np.pi/180*38,0]
+alpha2,beta2 = [0,np.pi/180*38.018]
 
 #Representation of vector in #D using the two angles given (alpha and beta)
 v2 = np.array([np.sin(alpha2),np.cos(alpha2)*np.sin(beta2),np.cos(alpha2)*np.cos(beta2)])
@@ -104,4 +106,5 @@ distance2 = np.linalg.norm(point2-point1)
 print("Distance between Point1 and Point2 [km]: ",distance1,"or ",distance2,'\n')
 
 final_point = (point1+point2)/2
-print("Final Point [km]:",final_point)
+print("Final Point [km]:",final_point,'\n')
+print("--- Computational Time: %s seconds ---" % (time.time() - start_time))
