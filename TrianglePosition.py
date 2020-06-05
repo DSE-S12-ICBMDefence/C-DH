@@ -56,8 +56,8 @@ print("Vector1 Attitude: ",vector1,'\n')
 ###S/C2###
 
 #Longitude and latitude
-lat2 = 0 #[rad]
-lon2 = np.pi/4 #[rad]
+lat2 = np.pi/180*68 #[rad]
+lon2 = 0 #[rad]
 
 #S/C2 position in km
 spacecraftlocation2 = radius*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np.cos(lat2),np.sin(lat2)])
@@ -65,11 +65,11 @@ print("S/C2 Location [km]: ",spacecraftlocation2)
 
 #Attitude angles
 yaw2 = 0 #[rad]
-roll2 = -np.pi/2 #[rad]
-pitch2 = np.pi/4 #(90+18.32) #[rad] #Test 170deg
+roll2 = 0 #[rad]
+pitch2 = np.pi/180*(90+68) #(90+18.32) #[rad] #Test 170deg
 
 #Angles of the bright pixel in radians
-alpha2,beta2 = [0,0]
+alpha2,beta2 = [np.pi/180*38,0]
 
 #Representation of vector in #D using the two angles given (alpha and beta)
 v2 = np.array([np.sin(alpha2),np.cos(alpha2)*np.sin(beta2),np.cos(alpha2)*np.cos(beta2)])
