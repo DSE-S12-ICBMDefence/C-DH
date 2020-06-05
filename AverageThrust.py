@@ -60,5 +60,3 @@ def AvgThurst(missile, stage) :
         return T_avg_3
 
 
-
-print(AvgThurst('minuteman',3))
