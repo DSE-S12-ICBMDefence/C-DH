@@ -2,7 +2,8 @@ from math import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-FOV   = 20*pi/180 #rad
+FOV_l   = -10*pi/180 #rad
+FOV_r   = +10*pi/180 #rad
 Re   = 6371 #km
 n_pix = 21
 h = 1000 #km
@@ -18,16 +19,16 @@ dt = 10 #s
 
 
 
-def pixel_det(theta, spot, FOV, h,n_pix):
+def pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix):
 
     p = np.array([(Re+h)*cos(theta), (Re+h)*sin(theta)])
-    # print(p)
+    print(p)
     d_x = - p[0] + spot[0]    #y distance between bright and to s/c
     d_y = - p[1] + spot[1]    #x distance between bright and s/c
     # print(d_x,d_y)
     d = sqrt((d_x)**2 + (d_y)**2) #distance between bright and to s/c
     # print(d)
-    angle_pix = np.linspace(-FOV / 2, FOV / 2, n_pix+1)
+    angle_pix = np.linspace(FOV_l, FOV_r, n_pix+1)
     # print(len(angle_pix))
 
     if d_x > 0:
@@ -35,7 +36,7 @@ def pixel_det(theta, spot, FOV, h,n_pix):
     elif d_x <= 0:
         mu = -acos((d ** 2 + (Re + h) ** 2 - Re ** 2) / (2 * d * (Re + h)))
         
-    if mu < FOV/2 and mu > -FOV/2:
+    if mu < FOV_r and mu > FOV_l:
         i = 0
         pix = i
         while mu > angle_pix[i]:
@@ -91,7 +92,7 @@ theta = theta_0
 
 while running:
 
-    pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV, h, n_pix)
+    pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
 
     new_data = np.array([t, grad1, int1, grad2, int2])
 
