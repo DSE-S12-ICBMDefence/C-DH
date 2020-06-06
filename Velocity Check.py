@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 
 FOV   = 20*pi/180 #rad
 Re   = 6371 #km
-n_pix = 21
+n_pix = 1000
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
 theta_0 = 1*pi/180 + pi/2 #rad
 t_0 = 0
-dt = 10 #s
+dt = 1 #s
 # theta_end = -10*pi/180 + pi/2 #rad
 
 # print(thetas*180/pi)
@@ -79,19 +79,6 @@ def pixel_det(theta, spot, FOV, h,n_pix):
     # y2 = tan(eta2)*x2 + b
 
 # print(pixel_det(theta_0, spot, FOV, h, n_pix))
-
-# pix, m1, b1, m2, b2, mu = pixel_det(theta_0, spot, FOV, h, n_pix)
-# if m1*m2<0:
-#     x = np.linspace(-1,1,2)
-# else:
-#     x = np.linspace((Re+h)*cos(theta_0),0,2)
-# y1 = m1*x+b1
-# y2 = m2*x+b2
-# plt.plot(x,y1)
-# plt.plot(x,y2)
-# plt.scatter(spot[0],spot[1])
-# plt.show()
-
 
 running = True
 t = t_0
