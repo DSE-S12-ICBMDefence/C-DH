@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 
 FOV   = 20*pi/180 #rad
 Re   = 6371 #km
-n_pix = 1000
+n_pix = 21
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
 theta_0 = 1*pi/180 + pi/2 #rad
 t_0 = 0
-dt = 1 #s
+dt = 10 #s
 # theta_end = -10*pi/180 + pi/2 #rad
 
 # print(thetas*180/pi)
