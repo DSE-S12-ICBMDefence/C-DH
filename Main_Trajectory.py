@@ -9,12 +9,15 @@ from CdEstimator import Cd
 from ISA_2 import density_at_height
 from TempAlt import  Temp
 from Mass_extract_2 import Mass_t
+from Velocity_Check import pixel_det
+from Velocity_Check import pixel_data
 
 #----------SOLVING EOMs USING EULERS FORWARD INTEGRATION----------------------
 
 #making the missile do a thing
-rot_alt = 10000    #m
-turn = False
+rot_alt = 14000    #m
+rot_angle = -15
+
 
 
 #---parameters
@@ -69,117 +72,114 @@ def mtomach(v,h):
 
 #----------------SETTING UP DIFFERENTIAL EQUATIONS----------------------------
 #EOMS
-dt = 1 #s
+def TrajectoryData(rot_alt,rot_angle):
 
- #initial conditions
-# x and y coordinates are measured from the center of the earth
-v0 = 0.001       #km/s # starting with a neglibele initial  velocity
-phi0 = 0
-x0 = 0
-y0 = Re   # do we integrate till the y coordinate is Re again? that makes sense
-h0 = 0 #km
+    turn = False
 
-#Initially there would be no horizontal velocity or accellleration as the missile
-#typically has a very small angle of attack
+    dt = 1 #s
 
-t0 = 0.0
-vx0 = v0*m.sin(phi0)
-vy0 = v0*m.cos(phi0)
+     #initial conditions
+    # x and y coordinates are measured from the center of the earth
+    v0 = 0.001       #km/s # starting with a neglibele initial  velocity
+    phi0 = 0
+    x0 = 0
+    y0 = Re   # do we integrate till the y coordinate is Re again? that makes sense
+    h0 = 0 #km
 
+    #Initially there would be no horizontal velocity or accellleration as the missile
+    #typically has a very small angle of attack
 
-dvx0 = ((collect_thrust('minuteman',0) - 0.5*density_at_height(0.0)*A_m*Cd(0)*v0**2)/Mass_t('minuteman',0))\
-       *(vx0/v0) - (G*Me*x0)/(x0**2+y0**2)**(3/2)
-
-dvy0 = ((collect_thrust('minuteman',0) - 0.5*density_at_height(0.0)*A_m*Cd(0)*v0**2)/Mass_t('minuteman',0))\
-       *(vy0/v0) - (G*Me*y0)/(x0**2+y0**2)**(3/2)
+    t0 = 0.0
+    vx0 = v0*m.sin(phi0)
+    vy0 = v0*m.cos(phi0)
 
 
+    dvx0 = ((collect_thrust('minuteman',0) - 0.5*density_at_height(0.0)*A_m*Cd(0)*v0**2)/Mass_t('minuteman',0))\
+           *(vx0/v0) - (G*Me*x0)/(x0**2+y0**2)**(3/2)
 
-#you need to convert the input for the Cd approximate to mach
-# create a temperture altitude tool
-
-#the EOMs need to be integrated till z = Re - wtf
-y   = [y0]       #km
-x   = [x0]       #km
-h   = [h0]       #km
-v   = [v0]       #km/s
-vx  = [vx0]      #km/s
-vy  = [vy0]      #km/s
-dvx = [dvx0]     #km/s^2
-dvy = [dvy0]     #km/s^2
-timestamp = [t0] #s
-
-i = 0
-t = t0
-while t<= 9000 and h[i]>-1:
-    t = timestamp[i] +  dt
-    timestamp.append(t)
+    dvy0 = ((collect_thrust('minuteman',0) - 0.5*density_at_height(0.0)*A_m*Cd(0)*v0**2)/Mass_t('minuteman',0))\
+           *(vy0/v0) - (G*Me*y0)/(x0**2+y0**2)**(3/2)
 
 
 
-    if h[i]<=80000:
-        dvx_new =  ((collect_thrust('minuteman',t) - 0.5*density_at_height(h[i])*A_m*Cd(mtomach(v[i],h[i]))*v[i]**2)/Mass_t('minuteman',t))\
-           *(vx[i]/v[i]) - (G*Me*x[i])/(x[i]**2+y[i]**2)**(3/2)
+    #you need to convert the input for the Cd approximate to mach
+    # create a temperture altitude tool
 
-        dvx.append(dvx_new)
+    #the EOMs need to be integrated till z = Re - wtf
+    y   = [y0]       #km
+    x   = [x0]       #km
+    h   = [h0]       #km
+    v   = [v0]       #km/s
+    vx  = [vx0]      #km/s
+    vy  = [vy0]      #km/s
+    dvx = [dvx0]     #km/s^2
+    dvy = [dvy0]     #km/s^2
+    timestamp = [t0] #s
 
-        dvy_new = ((collect_thrust('minuteman', t) - 0.5 * density_at_height(h[i]) * A_m * Cd(mtomach(v[i], h[i])) * v[
-            i] ** 2) / Mass_t('minuteman',t)) \
-                  * (vy[i] / v[i]) - (G * Me * y[i]) / (x[i] ** 2 + y[i] ** 2) ** (3 / 2)
-
-        dvy.append(dvy_new)
-
-    else: #-----------beyond 80km drag becomes neglibible thus we set Cd = 0
-        dvx_new = ((collect_thrust('minuteman', t) - 0.5 * density_at_height(h[i]) * A_m * 0 * v[
-            i] ** 2) / Mass_t('minuteman',t)) \
-                  * (vx[i] / v[i]) - (G * Me * x[i]) / (x[i] ** 2 + y[i] ** 2) ** (3 / 2)
-
-        dvx.append(dvx_new)
-
-        dvy_new = ((collect_thrust('minuteman', t) - 0.5 * density_at_height(h[i]) * A_m * 0 * v[
-            i] ** 2) / Mass_t('minuteman',t)) \
-                  * (vy[i] / v[i]) - (G * Me * y[i]) / (x[i] ** 2 + y[i] ** 2) ** (3 / 2)
-
-        dvy.append(dvy_new)
-
-    vx_new = vx[i] + dvx_new*dt
-    vy_new = vy[i] + dvy_new * dt
+    i = 0
+    t = t0
+    while t<= 9800 and h[i]>-1:
+        t = timestamp[i] +  dt
+        timestamp.append(t)
 
 
-    x_new = x[i] + vx_new*dt
-    y_new = y[i] + vy_new*dt
 
-    h_new = m.sqrt(x_new**2 + y_new**2) - Re
+        if h[i]<=80000:
+            dvx_new =  ((collect_thrust('minuteman',t) - 0.5*density_at_height(h[i])*A_m*Cd(mtomach(v[i],h[i]))*v[i]**2)/Mass_t('minuteman',t))\
+               *(vx[i]/v[i]) - (G*Me*x[i])/(x[i]**2+y[i]**2)**(3/2)
 
-    v_new = m.sqrt(vx_new**2 + vy_new**2)
+            dvx.append(dvx_new)
+
+            dvy_new = ((collect_thrust('minuteman', t) - 0.5 * density_at_height(h[i]) * A_m * Cd(mtomach(v[i], h[i])) * v[
+                i] ** 2) / Mass_t('minuteman',t)) \
+                      * (vy[i] / v[i]) - (G * Me * y[i]) / (x[i] ** 2 + y[i] ** 2) ** (3 / 2)
+
+            dvy.append(dvy_new)
+
+        else: #-----------beyond 80km drag becomes neglibible thus we set Cd = 0
+            dvx_new = ((collect_thrust('minuteman', t) - 0.5 * density_at_height(h[i]) * A_m * 0 * v[
+                i] ** 2) / Mass_t('minuteman',t)) \
+                      * (vx[i] / v[i]) - (G * Me * x[i]) / (x[i] ** 2 + y[i] ** 2) ** (3 / 2)
+
+            dvx.append(dvx_new)
+
+            dvy_new = ((collect_thrust('minuteman', t) - 0.5 * density_at_height(h[i]) * A_m * 0 * v[
+                i] ** 2) / Mass_t('minuteman',t)) \
+                      * (vy[i] / v[i]) - (G * Me * y[i]) / (x[i] ** 2 + y[i] ** 2) ** (3 / 2)
+
+            dvy.append(dvy_new)
+
+        vx_new = vx[i] + dvx_new*dt
+        vy_new = vy[i] + dvy_new * dt
 
 
-    # #trying to incorporate a control input for trajectory
-    if h[i] > rot_alt and turn == False:
-        phi_new = 15 *(m.pi/180)
-        vx_new = v_new*m.sin(phi_new)
-        vy_new = v_new * m.cos(phi_new)
-        turn=True
+        x_new = x[i] + vx_new*dt
+        y_new = y[i] + vy_new*dt
 
-    x.append(x_new)
-    y.append(y_new)
-    h.append(h_new)
-    vx.append(vx_new)
-    vy.append(vy_new)
-    v.append(v_new)
+        h_new = m.sqrt(x_new**2 + y_new**2) - Re
 
-    i+=1
+        v_new = m.sqrt(vx_new**2 + vy_new**2)
 
-plt.plot(x[:-1],y[:-1])
-plt.show()
 
-# plt.title("Missile Trajectory")
-# plt.xlabel("x displacement [m]")
-# plt.ylabel("y displacement [m]")
-# plt.plot(x_val,y_val, 'x', label = "Validation Data")
-# plt.plot(x,y, label = "Numerical Model")
-# plt.legend()
-# plt.show()
+        # #trying to incorporate a control input for trajectory
+        if h[i] > rot_alt and turn == False:
+            phi_new = rot_angle *(m.pi/180)
+            vx_new = v_new*m.sin(phi_new)
+            vy_new = v_new * m.cos(phi_new)
+            turn=True
+
+
+        x.append(x_new)
+        y.append(y_new)
+        h.append(h_new)
+        vx.append(vx_new)
+        vy.append(vy_new)
+        v.append(v_new)
+
+
+        i+=1
+    return [x,y,h,vx,vy,v]
+
 
 
 
