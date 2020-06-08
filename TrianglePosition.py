@@ -52,7 +52,7 @@ pitch2 = 0 #[rad]     (90+18.32) #[rad] #Test 170deg
 alpha2 = 0 #[rad]
 beta2 = np.pi/180*38.018 #[rad]
 
-def TrianglePosition(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,roll2,pitch2,alpha2,beta2):
+def Triangulation3D(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,roll2,pitch2,alpha2,beta2):
     start_time = time.time()
 
     Re = 6378 #[km]
@@ -112,7 +112,7 @@ def TrianglePosition(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,r
     print("--- Computational Time: %s seconds ---" % (time.time() - start_time))
     return final_point
 
-print(TrianglePosition(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,roll2,pitch2,alpha2,beta2))
+print(Triangulation3D(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,roll2,pitch2,alpha2,beta2))
 
 #%%
 
