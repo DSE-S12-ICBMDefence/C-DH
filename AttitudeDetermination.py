@@ -38,16 +38,19 @@ print("MOI including solar arrays: ",I_solarpanel)
 #beta around x
 
 #Determine the time sum of two attitude manouvres
-def AttitudeDeterminationTime(Ixx,Iyy,Torque,alpha,beta):
+def AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,alpha,beta,gamma):
     time1 = math.sqrt(4*beta*Ixx/Torque)
     time2 = math.sqrt(4*alpha*Iyy/Torque)
-    time = time1 + time2
+    time3 = math.sqrt(4*gamma*Izz/Torque)
+    time = time1 + time2 + time3
     return time
 
 Ixx = I_solarpanel[0][0]
 Iyy = I_solarpanel[1][1]
+Izz = I_solarpanel[2][2]
 Torque = 0.007 #[Nm]
-alpha = np.pi/180*20 #[rad]
-beta = np.pi/180*50 #[rad]
+alpha = np.pi/180*0 #[rad]
+beta = np.pi/180*0 #[rad]
+gamma = np.pi/180*180 #[rad]
 
-print("Total Time: ",AttitudeDeterminationTime(Ixx,Iyy,Torque,alpha,beta))
+print("Total Time: ",AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,alpha,beta,gamma))
