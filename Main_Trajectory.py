@@ -118,7 +118,7 @@ def TrajectoryData(rot_alt,rot_angle):
 
     i = 0
     t = t0
-    while t<= 9800 and h[i]>-1:
+    while t<= 400 and h[i]>-1:
         t = timestamp[i] +  dt
         timestamp.append(t)
 
@@ -178,7 +178,7 @@ def TrajectoryData(rot_alt,rot_angle):
 
 
         i+=1
-    return [x,y,h,vx,vy,v]
+    return [x,y,h,vx,vy,v,timestamp]
 
 
 
