@@ -12,7 +12,7 @@ grav_c = 398600 #km^3 s^-2
 spot = np.array([0,Re])
 theta_0 = 1*pi/180 + pi/2 #rad
 t_0 = 0
-dt = 1 #s
+dt = 10 #s
 # theta_end = -10*pi/180 + pi/2 #rad
 
 # print(thetas*180/pi)
