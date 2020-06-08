@@ -108,3 +108,32 @@ print("Distance between Point1 and Point2 [km]: ",distance1,"or ",distance2,'\n'
 final_point = (point1+point2)/2
 print("Final Point [km]:",final_point,'\n')
 print("--- Computational Time: %s seconds ---" % (time.time() - start_time))
+
+#%%
+
+#PLAYING AROUND TO TRY TO GET 3D POLYGON OF INTERSECTING PIXELS
+xbright = 3
+ybright = 3
+npixx = 5
+npixy = 5
+FOVx = 10
+FOVy = 10
+
+#getting the angles that form the four vertices of the bright pixel
+pixbetas = np.linspace(-FOVx/2,FOVx/2,npixx+1)
+pixalphas = np.linspace(-FOVy/2,FOVy/2,npixy+1)
+#for the bottom left vertix (a)
+abeta = pixbetas[ybright-1]
+aalpha = pixalphas[xbright-1]
+#for the bottom right (b)
+bbeta = pixbetas[ybright]
+balpha = pixalphas[xbright-1]
+#for the top right (c)
+cbeta = pixbetas[ybright]
+calpha = pixalphas[xbright]
+#for the top left (d)
+dbeta = pixbetas[ybright-1]
+dalpha = pixalphas[xbright]
+#they only have as starting point the spacecraft position
+
+
