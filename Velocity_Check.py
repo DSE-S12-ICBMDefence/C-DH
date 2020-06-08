@@ -11,8 +11,7 @@ grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
 theta_0 = 1*pi/180 + pi/2 #rad
-t_0 = 0
-dt = 1 #s
+
 # theta_end = -10*pi/180 + pi/2 #rad
 
 # print(thetas*180/pi)
@@ -22,7 +21,7 @@ dt = 1 #s
 def pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix):
 
     p = np.array([(Re+h)*cos(theta), (Re+h)*sin(theta)])
-    print(p)
+    # print(p)
     d_x = - p[0] + spot[0]    #y distance between bright and to s/c
     d_y = - p[1] + spot[1]    #x distance between bright and s/c
     # print(d_x,d_y)
@@ -82,7 +81,9 @@ def pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix):
 # print(pixel_det(theta_0, spot, FOV, h, n_pix))
 
 running = True
+t_0 = 0
 t = t_0
+dt = 1 #s
 omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
 
 # pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])
@@ -104,7 +105,8 @@ while running:
 
     dtheta = omega_sat*dt
     theta = theta - dtheta
-    t = t_0 + dt
+    t = t + dt
+
 
     if grad1 > 100000:
         running = False

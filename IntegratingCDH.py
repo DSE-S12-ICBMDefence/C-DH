@@ -13,14 +13,12 @@ from Velocity_Check import pixel_det
 from Velocity_Check import pixel_data
 from Main_Trajectory import TrajectoryData
 
-<<<<<<< HEAD
 
-=======
 def generate_trajectories(rot_alt,rot_angle):
     x, y, h, vx, vy, v = TrajectoryData(rot_alt,rot_angle)
     rot_alts = np.linspace(10000,100000,50)
     rot_angles = np.linspace
-=======
+
 def generate_trajectories(rot_alt_step,rot_angle_step):
 
     rot_alts = np.linspace(10000,100000,rot_alt_step)
@@ -58,7 +56,28 @@ y_new = np.array(y)
 lala = compile_matrix(t_new[0],x_new[0],y_new[0])
 print(lala)
 
+print(pixel_data)
+
+def velocity_check(pixel_data, piece, x_new):
+
+# pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_
+
+    for row in range(len(pixel_data)):
+        for i in range(len(x_new)):
+        #y = mx+b
+
+            y1 = pixel_data[row, 1]*x_new[i] + pixel_data[row,2]
 
 
->>>>>>> eb0e5a1e630c0871269ccc18e3aa619f58eeae37
+
+
+
+
+
+
+
+
+
+
+
 
