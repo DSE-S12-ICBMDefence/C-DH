@@ -10,10 +10,9 @@ h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
-theta_0 = 1.5*pi/180 + pi/2 #rad
 t_0 = 0
 dt = 10 #s
-
+theta_0 = 1*pi/180 + pi/2 #rad
 
 # theta_end = -10*pi/180 + pi/2 #rad
 
@@ -136,61 +135,3 @@ def get_pixel_data(t_0, running=True):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# x = np.linspace(-20,20,10)
-
-# m1 = pixel_data[1:,1]
-# b1 = pixel_data[1:,2]
-# m2 = pixel_data[1:,3]
-# b2 = pixel_data[1:,4]
-
-# funys = []
-# for i in range(len(m1)):
-
-#     y2 = m1[i]*x + b1[i]
-#     funys.append(y2)
-
-# for plot in funys:
-#     plt.plot(x,plot)
-# plt.show()
-
-# for i in range(len(m2)):
-#
-#     y2 = m2[i]*x + b2[i]
-#
-#     plt.plot(x,y2)
-#     plt.show()
-#
-#
-# ytes = []
-# for i in range(len(x)):
-#     y = m1[i]*x[i] + b1[i]
-#     ytes.append(y)
-#
-# plt.plot(x,ytes)
-# plt.show()
-#
-# for i in range(len(m1)):
-#     y1 = []
-#     y1 = m1[i] * x + b1[i]
-
-
-
-# def check_trajectory ():
