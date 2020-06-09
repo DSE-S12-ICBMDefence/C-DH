@@ -72,7 +72,12 @@ def mtomach(v,h):
 
 #----------------SETTING UP DIFFERENTIAL EQUATIONS----------------------------
 #EOMS
-def TrajectoryData(rot_alt,rot_angle):
+
+#missile origin
+x0 = 0
+y0 = Re
+
+def TrajectoryData(rot_alt,rot_angle,x0,y0):
 
     turn = False
 
@@ -82,8 +87,8 @@ def TrajectoryData(rot_alt,rot_angle):
     # x and y coordinates are measured from the center of the earth
     v0 = 0.001       #km/s # starting with a neglibele initial  velocity
     phi0 = 0
-    x0 = 0
-    y0 = Re   # do we integrate till the y coordinate is Re again? that makes sense
+    # x0 = 0
+    # y0 = Re   # do we integrate till the y coordinate is Re again? that makes sense
     h0 = 0 #km
 
     #Initially there would be no horizontal velocity or accellleration as the missile
@@ -118,7 +123,7 @@ def TrajectoryData(rot_alt,rot_angle):
 
     i = 0
     t = t0
-    while t<= 400 and h[i]>-1:
+    while t<= 90 and h[i]>-1:
         t = timestamp[i] +  dt
         timestamp.append(t)
 
@@ -163,7 +168,7 @@ def TrajectoryData(rot_alt,rot_angle):
 
         # #trying to incorporate a control input for trajectory
         if h[i] > rot_alt and turn == False:
-            phi_new = rot_angle *(m.pi/180)
+            phi_new = rot_angle * m.pi/180
             vx_new = v_new*m.sin(phi_new)
             vy_new = v_new * m.cos(phi_new)
             turn=True
