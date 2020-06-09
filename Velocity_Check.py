@@ -10,13 +10,11 @@ h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
-theta_0 = 1*pi/180 + pi/2 #rad
-<<<<<<< HEAD:Velocity Check.py
+theta_0 = 1.5*pi/180 + pi/2 #rad
 t_0 = 0
 dt = 10 #s
-=======
 
->>>>>>> a4c61cd6c2f760662a2c241d0c0c623168f8de60:Velocity_Check.py
+
 # theta_end = -10*pi/180 + pi/2 #rad
 
 # print(thetas*180/pi)
@@ -84,16 +82,16 @@ def pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix):
     # y2 = tan(eta2)*x2 + b
 
 # print(pixel_det(theta_0, spot, FOV, h, n_pix))
+running = True
+t_0 = 0
+def get_pixel_data(t_0, running=True):
 
-def ()
-    running = True
-    t_0 = 0
     t = t_0
     dt = 1 #s
     omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
 
     # pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])
-    pixel_data = np.array([0, 0, 0, 0,0])
+    pixel_data = np.array([0, 0, 0, 0,0,0])
 
     theta = theta_0
 
@@ -101,12 +99,12 @@ def ()
 
         pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
 
-        new_data = np.array([t, grad1, int1, grad2, int2])
-
+        new_data = np.array([t, grad1, int1, grad2, int2, theta])
+        print(new_data)
         update = np.vstack((pixel_data, new_data))
-
+        print(update)
         pixel_data = update
-
+        print(pixel_data)
 
 
         dtheta = omega_sat*dt
@@ -133,7 +131,7 @@ def ()
     # plt.title('')
     # plt.show()
 
-    return()
+    return(pixel_data)
 
 
 
