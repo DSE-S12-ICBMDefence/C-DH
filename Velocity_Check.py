@@ -80,52 +80,76 @@ def pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix):
 
 # print(pixel_det(theta_0, spot, FOV, h, n_pix))
 
-running = True
-t_0 = 0
-t = t_0
-dt = 1 #s
-omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
+def ()
+    running = True
+    t_0 = 0
+    t = t_0
+    dt = 1 #s
+    omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
 
-# pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])
-pixel_data = np.array([0, 0, 0, 0,0])
+    # pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])
+    pixel_data = np.array([0, 0, 0, 0,0])
 
-theta = theta_0
+    theta = theta_0
 
-while running:
+    while running:
 
-    pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
+        pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
 
-    new_data = np.array([t, grad1, int1, grad2, int2])
+        new_data = np.array([t, grad1, int1, grad2, int2])
 
-    update = np.vstack((pixel_data, new_data))
+        update = np.vstack((pixel_data, new_data))
 
-    pixel_data = update
-
-
-
-    dtheta = omega_sat*dt
-    theta = theta - dtheta
-    t = t + dt
+        pixel_data = update
 
 
-    if grad1 > 100000:
-        running = False
-        pixel_data = pixel_data[:-1, :]
-        
-    #things to make a plot
-    if running:
-        if grad1*grad2<0:
-            x = np.linspace(-1,1,2)
-        else:
-            x = np.linspace(p[0],0,2)
-        y1 = grad1*x+int1
-        y2 = grad2*x+int2
-        plt.plot(x,y1)
-        plt.plot(x,y2)
 
-plt.scatter(spot[0],spot[1])
-plt.title('wowowowowowowow')
-plt.show()
+        dtheta = omega_sat*dt
+        theta = theta - dtheta
+        t = t + dt
+
+
+        if grad1 > 100000:
+            running = False
+            pixel_data = pixel_data[:-1, :]
+
+        #things to make a plot
+        if running:
+            if grad1*grad2<0:
+                x = np.linspace(-1,1,2)
+            else:
+                x = np.linspace(p[0],0,2)
+            y1 = grad1*x+int1
+            y2 = grad2*x+int2
+            plt.plot(x,y1)
+            plt.plot(x,y2)
+
+    plt.scatter(spot[0],spot[1])
+    # plt.title('')
+    # plt.show()
+
+    return()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # x = np.linspace(-20,20,10)
 
