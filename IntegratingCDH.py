@@ -10,8 +10,9 @@ from ISA_2 import density_at_height
 from TempAlt import  Temp
 from Mass_extract_2 import Mass_t
 from Velocity_Check import pixel_det
-from Velocity_Check import pixel_data
-from Velocity_Check import theta
+# from Velocity_Check import pixel_data
+from Velocity_Check import get_pixel_data
+# from Velocity_Check import theta
 from Main_Trajectory import TrajectoryData
 
 rot_alt_step = 5
@@ -27,12 +28,7 @@ grav_c = 398600 #km^3 s^-2
 spot = np.array([0,Re])
 theta_0 = 1*pi/180 + pi/2 #rad
 
-pix, m1, b1, m2, b2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix)
 
-def generate_trajectories(rot_alt,rot_angle):
-    x, y, h, vx, vy, v = TrajectoryData(rot_alt,rot_angle)
-    rot_alts = np.linspace(10000,100000,50)
-    rot_angles = np.linspace
 
 def generate_trajectories(rot_alt_step,rot_angle_step):
 
@@ -54,11 +50,7 @@ def generate_trajectories(rot_alt_step,rot_angle_step):
 
 
 def compile_matrix(t,x,y):
-
-    #data_base = np.array([0,0,0])
-    #for item in range(len(x)):
     piece = np.array([[t],[x],[y]])
-    #print(piece)
 
     return piece
 
@@ -71,58 +63,47 @@ y_new = np.array(y)
 iterations = rot_alt_step*rot_angle_step
 i = 0
 matrix = np.empty([iterations,3,1,402])
+
 while i<len(t_new):
     piece = compile_matrix(t_new[i],x_new[i],y_new[i])
-
     matrix[i,:,:,:] = piece
 
     i += 1
 
-# pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_
-boundaries = []
-
+pixel_data = get_pixel_data(0, running=True)
 pixel_data = pixel_data[1:]
 
-
 for row in range(len(pixel_data)):
-    temp_boundaries = []
+    print(pixel_data[row,0])
+
+    theta = pixel_data[row,-1]
+    pix, m1, b1, m2, b2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
     i = 0
-
     while i < len(matrix):
-
-    #y = mx+b
-
-        if matrix[i,:,:,:] is None:
-            i = i+1
-
 
         y1 = (pixel_data[row, 1]*matrix[i,1,0, row] + pixel_data[row,2])*1000
         y2 = (pixel_data[row, 3]*matrix[i,1,0, row] + pixel_data[row,4])*1000
-
-        # temp_boundaries.append((y1,y2))
-
         y_traj = matrix[i,2,0, row]
 
         # if statement on field of view
-
-
-        if mu > FOV_l and mu<0:
+        if mu<0: #in left FOV
             # ym>y1, ym<y2
-            if y_traj<y1 and y_traj>y2:
-                matrix[i,:,:,:] = None
+            if y_traj>y1 and y_traj<y2:
+                matrix = np.delete(matrix,i,0)
 
-
-        if mu < FOV_r and mu>0:
+        if mu>0: #in right FOV
             #ym<y1, ym>y2
-            if y_traj > y1 and y_traj < y2:
-                matrix[i, :, :, :] = None
+            if y_traj < y1 and y_traj > y2:
+                matrix = np.delete(matrix,i,0)
 
         i = i+1
-        # check if boundary is ok --> if ok: keep matrix, if not ok: remove matrix element
 
-    # boundaries.append(temp_boundaries)
+    print(matrix)
 
-print(matrix)
+
+
+
+
 
 
 

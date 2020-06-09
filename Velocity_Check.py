@@ -11,7 +11,12 @@ grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
 theta_0 = 1*pi/180 + pi/2 #rad
+<<<<<<< HEAD:Velocity Check.py
+t_0 = 0
+dt = 10 #s
+=======
 
+>>>>>>> a4c61cd6c2f760662a2c241d0c0c623168f8de60:Velocity_Check.py
 # theta_end = -10*pi/180 + pi/2 #rad
 
 # print(thetas*180/pi)

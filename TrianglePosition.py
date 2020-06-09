@@ -112,7 +112,7 @@ def Triangulation3D(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,ro
     print("--- Computational Time: %s seconds ---" % (time.time() - start_time))
     return final_point
 
-#Example:  print(Triangulation3D(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,roll2,pitch2,alpha2,beta2))
+#Example: print(Triangulation3D(h,lat1,lon1,yaw1,roll1,pitch1,alpha1,beta1,lat2,lon2,yaw2,roll2,pitch2,alpha2,beta2))
 
 #%%
 
