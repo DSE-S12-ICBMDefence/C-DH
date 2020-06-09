@@ -63,6 +63,7 @@ def velocity_check(pixel_data, piece, x_new):
 # pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_
 
     for row in range(len(pixel_data)):
+
         for i in range(len(x_new)):
         #y = mx+b
 
