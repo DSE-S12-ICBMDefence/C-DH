@@ -168,7 +168,7 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
 
         # #trying to incorporate a control input for trajectory
         if h[i] > rot_alt and turn == False:
-            phi_new = rot_angle *(m.pi/180)
+            phi_new = rot_angle * m.pi/180
             vx_new = v_new*m.sin(phi_new)
             vy_new = v_new * m.cos(phi_new)
             turn=True

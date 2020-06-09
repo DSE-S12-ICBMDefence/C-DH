@@ -11,7 +11,7 @@ from scipy import interpolate
 # from Velocity_Check import pixel_det
 # from Velocity_Check import pixel_data
 from Main_Trajectory import TrajectoryData
-
+from scipy import spatial
 
 
 
@@ -31,25 +31,26 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
     temp_t = []
     for alt in rot_alts:
         for angle in rot_angles:
+            x, y, h, vx, vy, v, t = TrajectoryData(alt, angle, 0, Re)
+            xvector = np.zeros((len(x),3))
+            xvector[:,0] = x
+            xvector[:,1] = y
             for theta_x in x_trans:
                 for dt in delta_t:
+                    transformationmatrix = sp.spatial.transform.Rotation.from_euler('z',theta_x).as_matrix()
+                    xvectorrot = np.einsum('ij,kj->ki',transformationmatrix,xvector)
 
-                    x0 = Re * cos(theta_x)
-                    y0 = Re * sin(theta_x)
+                    xrot = np.copy(xvectorrot[:,0])
+                    yrot = np.copy(xvectorrot[:,1])
 
-                    if y0 != 0:
-
-                        x, y, h, vx, vy, v,t = TrajectoryData(alt, angle+ theta_x - pi/2,x0,y0,theta_x - pi/2)
-
-
-                        temp_x.append(x)
-                        temp_y.append(y)
-                        temp_t.append(t-dt)
+                    temp_x.append(xrot)
+                    temp_y.append(yrot)
+                    temp_t.append(t-dt)
 
 
     return temp_x,temp_y,temp_t
 
 x,y,t = generate_trajectories(5,2,5, 10)
-# for i in range(len(x)):
-#     plt.plot(x[i],y[i])
-# plt.show()
+for i in range(len(x)):
+     plt.plot(x[i],y[i])
+plt.show()
