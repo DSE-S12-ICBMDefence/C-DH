@@ -7,7 +7,7 @@ from TrianglePosition import Triangulation3D
 import scipy.spatial as ss
 
 #Flat Plane
-def plane(point0,point1,point2,rgb):
+def Plane(point0,point1,point2,rgb):
     u = point1-point0
     v = point2-point0
 
@@ -25,7 +25,7 @@ def plane(point0,point1,point2,rgb):
     #ax.plot_surface(X, Y, Z, color=rgb)
     return a,b,c,d
 
-def perpendicularplane(vector,point):
+def PerpendicularPlane(vector,point):
     a,b,c = vector
     d = a*point[0]+b*point[1]+c*point[2]
     X, Y = np.meshgrid(np.linspace(-0.25, 0.25, 2), np.linspace(-0.25, 0.25, 2))
@@ -42,7 +42,10 @@ def Intersection(coeff0,coeff1,coeff2):
                   [coeff1[0],coeff1[1],coeff1[2]],
                   [coeff2[0],coeff2[1],coeff2[2]]])
     B = np.transpose(np.array([coeff0[3],coeff1[3],coeff2[3]]))
-    return np.linalg.solve(A,B)
+    finalpoint = np.linalg.solve(A,B)
+    print('The intersection is [x:{0},y:{1},z:{2}]'.format(finalpoint[0],finalpoint[1],finalpoint[2]))
+    #ax.scatter3D(finalpoint[0],finalpoint[1],finalpoint[2],'black')
+    return finalpoint
 
 #Transformation FoV
 def TransformationFoV(alpha,beta):
@@ -86,12 +89,6 @@ lonbright = 0 #[rad]
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-#uEarth, vEarth = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
-#xEarth = Re*np.cos(uEarth)*np.sin(vEarth)
-#yEarth = Re*np.sin(uEarth)*np.sin(vEarth)
-#zEarth = Re*np.cos(vEarth)
-#ax.plot_wireframe(xEarth, yEarth, zEarth, color="k")
-
 radiussat = Re+hsat #[km]
 radiusbright = Re + hbright #[km]
 
@@ -99,90 +96,89 @@ pointsc1 = pointsc1_x,pointsc1_y,pointsc1_z = radiussat*np.array([np.cos(lon1)*n
 pointsc2 = pointsc2_x,pointsc2_y,pointsc2_z = radiussat*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np.cos(lat2),np.sin(lat2)])
 pointpixel = pointpixel_x,pointpixel_y,pointpixel_z = radiusbright*np.array([np.cos(lonbright)*np.cos(latbright),np.sin(lonbright)*np.cos(latbright),np.sin(latbright)])
 
-#ax.set_xlim([pointpixel_x-1,pointpixel_x+1])
-#ax.set_ylim([pointpixel_y-1,pointpixel_y+1])
-#ax.set_zlim([pointpixel_z-1,pointpixel_z+1])
+ax.set_xlim([pointpixel_x-1,pointpixel_x+1])
+ax.set_ylim([pointpixel_y-1,pointpixel_y+1])
+ax.set_zlim([pointpixel_z-1,pointpixel_z+1])
 
 ax.scatter3D(pointsc1_x,pointsc1_y,pointsc1_z,color = 'red')
 ax.scatter3D(pointsc2_x,pointsc2_y,pointsc2_z,color = 'blue')
 ax.scatter3D(pointpixel_x,pointpixel_y,pointpixel_z,color = 'black')
+
+print(pointpixel)
 
 ax.plot3D([pointsc1_x,pointpixel_x],[pointsc1_y,pointpixel_y],[pointsc1_z,pointpixel_z],color = 'red')
 ax.plot3D([pointsc2_x,pointpixel_x],[pointsc2_y,pointpixel_y],[pointsc2_z,pointpixel_z],color = 'blue')
 
 vectorsc1 = pointsc1-pointpixel
 vectorsc2 = pointsc2-pointpixel
-#coeff0 = a0,b0,c0,d0 = perpendicularplane(pointpixel-0,pointpixel)
 
-camera1vector1 = np.dot(np.array([[1/np.sin(FoV/2),0,0],[0,np.sin(FoV/2),0],[0,0,np.cos(FoV/2)*np.cos(FoV/2)]]),vectorsc1)
-print(camera1vector1)
-camera1sc1 = camera1sc1_x,camera1sc1_y,camera1sc1_z = PointPerpendicularPlane(pointsc1,camera1vector1,pointpixel)
-ax.plot3D([pointsc1_x,camera1sc1_x],[pointsc1_y,camera1sc1_y],[pointsc1_z,camera1sc1_z],color = 'black')
+camera1vector1 = camera1vector1_x,camera1vector1_y,camera1vector1_z= np.dot(TransformationFoV(FoV/2,FoV/2),vectorsc1)
+camera2vector1 = camera2vector1_x,camera2vector1_y,camera2vector1_z= np.dot(TransformationFoV(-FoV/2,FoV/2),vectorsc1)
+camera3vector1 = camera3vector1_x,camera3vector1_y,camera3vector1_z= np.dot(TransformationFoV(FoV/2,-FoV/2),vectorsc1)
+camera4vector1 = camera4vector1_x,camera4vector1_y,camera4vector1_z= np.dot(TransformationFoV(-FoV/2,-FoV/2),vectorsc1)
 
-camera2vector1 = np.dot(TransformationFoV(-FoV/2,FoV/2),vectorsc1)
-camera2sc1 = camera2sc1_x,camera2sc1_y,camera2sc1_z = PointPerpendicularPlane(pointsc1,camera2vector1,pointpixel)
-#ax.plot3D([pointsc1_x,camera2sc1_x],[pointsc1_y,camera2sc1_y],[pointsc1_z,camera2sc1_z],color = 'black')
+camera1vector2 = camera1vector2_x,camera1vector2_y,camera1vector2_z= np.dot(TransformationFoV(FoV/2,FoV/2),vectorsc2)
+camera2vector2 = camera2vector2_x,camera2vector2_y,camera2vector2_z= np.dot(TransformationFoV(-FoV/2,FoV/2),vectorsc2)
+camera3vector2 = camera3vector2_x,camera3vector2_y,camera3vector2_z= np.dot(TransformationFoV(FoV/2,-FoV/2),vectorsc2)
+camera4vector2 = camera4vector2_x,camera4vector2_y,camera4vector2_z= np.dot(TransformationFoV(-FoV/2,-FoV/2),vectorsc2)
 
-camera3vector1 = np.dot(TransformationFoV(FoV/2,-FoV/2),vectorsc1)
-camera3sc1 = camera3sc1_x,camera3sc1_y,camera3sc1_z = PointPerpendicularPlane(pointsc1,camera3vector1,pointpixel)
-#ax.plot3D([pointsc1_x,camera3sc1_x],[pointsc1_y,camera3sc1_y],[pointsc1_z,camera3sc1_z],color = 'black')
+ax.plot3D([pointsc1_x,pointsc1_x-camera1vector1_x],[pointsc1_y,pointsc1_y-camera1vector1_y],[pointsc1_z,pointsc1_z-camera1vector1_z],color = 'black')
+ax.scatter3D(pointsc1_x-camera1vector1_x,pointsc1_y-camera1vector1_y,pointsc1_z-camera1vector1_z,color = 'black')
+ax.scatter3D(pointsc1_x-camera2vector1_x,pointsc1_y-camera2vector1_y,pointsc1_z-camera2vector1_z,color = 'green')
+ax.scatter3D(pointsc1_x-camera3vector1_x,pointsc1_y-camera3vector1_y,pointsc1_z-camera3vector1_z,color = 'yellow')
+ax.scatter3D(pointsc1_x-camera4vector1_x,pointsc1_y-camera4vector1_y,pointsc1_z-camera4vector1_z,color = 'pink')
 
-camera4vector1 = np.dot(TransformationFoV(-FoV/2,-FoV/2),vectorsc1)
-camera4sc1 = camera4sc1_x,camera4sc1_y,camera4sc1_z = PointPerpendicularPlane(pointsc1,camera4vector1,pointpixel)
-#ax.plot3D([pointsc1_x,camera4sc1_x],[pointsc1_y,camera4sc1_y],[pointsc1_z,camera4sc1_z],color = 'black')
+ax.plot3D([pointsc2_x,pointsc2_x-camera1vector2_x],[pointsc2_y,pointsc2_y-camera1vector2_y],[pointsc2_z,pointsc2_z-camera1vector2_z],color = 'black')
+ax.scatter3D(pointsc2_x-camera1vector2_x,pointsc2_y-camera1vector2_y,pointsc2_z-camera1vector2_z,color = 'black')
+ax.scatter3D(pointsc2_x-camera2vector2_x,pointsc2_y-camera2vector2_y,pointsc2_z-camera2vector2_z,color = 'green')
+ax.scatter3D(pointsc2_x-camera3vector2_x,pointsc2_y-camera3vector2_y,pointsc2_z-camera3vector2_z,color = 'yellow')
+ax.scatter3D(pointsc2_x-camera4vector2_x,pointsc2_y-camera4vector2_y,pointsc2_z-camera4vector2_z,color = 'pink')
 
-#print(vectorsc1,TransformationFoV(FoV/2,FoV/2)*vectorsc1)
-#pointsc1 = pointsc1_x,pointsc1_y,pointsc1_z = np.array([0,0,4])
+plane1sc1 = a1sc1,b1sc1,c1sc1,d1sc1 = Plane(pointsc1,pointsc1-camera1vector1,pointsc1-camera2vector1,'black')
+plane2sc1 = a2sc1,b2sc1,c2sc1,d2sc1 = Plane(pointsc1,pointsc1-camera2vector1,pointsc1-camera3vector1,'green')
+plane3sc1 = a3sc1,b3sc1,c3sc1,d3sc1 = Plane(pointsc1,pointsc1-camera3vector1,pointsc1-camera4vector1,'yellow')
+plane4sc1 = a4sc1,b4sc1,c4sc1,d4sc1 = Plane(pointsc1,pointsc1-camera4vector1,pointsc1-camera1vector1,'pink')
 
-#camera1sc1 = camera1sc1_x,camera1sc1_y,camera1sc1_z = np.array([1,0,0])
-#camera2sc1 = camera2sc1_x,camera2sc1_y,camera2sc1_z = np.array([0,-1,0])
-#camera3sc1 = camera3sc1_x,camera3sc1_y,camera3sc1_z = np.array([-1,0,0])
-#camera4sc1 = camera4sc1_x,camera4sc1_y,camera4sc1_z = np.array([0,1,0])
+plane1sc2 = a1sc2,b1sc2,c1sc2,d1sc2 = Plane(pointsc2,pointsc2-camera1vector2,pointsc2-camera2vector2,'black')
+plane2sc2 = a2sc2,b2sc2,c2sc2,d2sc2 = Plane(pointsc2,pointsc2-camera2vector2,pointsc2-camera3vector2,'green')
+plane3sc2 = a3sc2,b3sc2,c3sc2,d3sc2 = Plane(pointsc2,pointsc2-camera3vector2,pointsc2-camera4vector2,'yellow')
+plane4sc2 = a4sc2,b4sc2,c4sc2,d4sc2 = Plane(pointsc2,pointsc2-camera4vector2,pointsc2-camera1vector2,'pink')
 
-#pointsc2 = pointsc2_x,pointsc2_y,pointsc2_z = np.array([0.5,0.5,4])
+intersection1 = Intersection(plane1sc1,plane1sc2,plane2sc1)
+intersection2 = Intersection(plane1sc1,plane1sc2,plane2sc2)
+intersection3 = Intersection(plane1sc1,plane1sc2,plane4sc1)
+intersection4 = Intersection(plane1sc1,plane1sc2,plane4sc2)
+intersection5 = Intersection(plane1sc1,plane3sc2,plane2sc1)
+intersection6 = Intersection(plane1sc1,plane3sc2,plane2sc2)
+intersection7 = Intersection(plane1sc1,plane3sc2,plane4sc1)
+intersection8 = Intersection(plane1sc1,plane3sc2,plane4sc2)
+intersection9 = Intersection(plane3sc1,plane1sc2,plane2sc1)
+intersection10 = Intersection(plane3sc1,plane1sc2,plane2sc2)
+intersection11 = Intersection(plane3sc1,plane1sc2,plane4sc1)
+intersection12 = Intersection(plane3sc1,plane1sc2,plane4sc2)
+intersection13 = Intersection(plane3sc1,plane3sc2,plane2sc1)
+intersection14 = Intersection(plane3sc1,plane3sc2,plane2sc2)
+intersection15 = Intersection(plane3sc1,plane3sc2,plane4sc1)
+intersection16 = Intersection(plane3sc1,plane3sc2,plane4sc2)
 
-#camera1sc2 = camera1sc2_x,camera1sc2_y,camera1sc2_z = np.array([1.5,0.5,0])
-#camera2sc2 = camera2sc2_x,camera2sc2_y,camera2sc2_z = np.array([0.5,-0.5,0])
-#camera3sc2 = camera3sc2_x,camera3sc2_y,camera3sc2_z = np.array([-0.5,0.5,0])
-#camera4sc2 = camera4sc2_x,camera4sc2_y,camera4sc2_z = np.array([0.5,1.5,0])
+def InsidePoint(point,coeff,direction):
+    epsilon = 10 ** (-5)
+    a,b,c,d = coeff
+    x,y,z = point
+    value = a*x+b*y+c*z+d
+    if direction=='right':
+        if value>-epsilon:
+            return True
+        else:
+            return False
+    elif direction=='left':
+        if value<epsilon:
+            return True
+        else:
+            return False
 
-#coeff0_1 = a0_1,b0_1,c0_1,d0_1 = plane(camera1sc1,camera2sc1,camera3sc1,'yellow')
-#coeff1_1 = a1_1,b1_1,c1_1,d1_1 = plane(pointsc1,camera1sc1,camera2sc1,'green')
-#coeff2_1 = a2_1,b2_1,c2_1,d2_1 = plane(pointsc1,camera2sc1,camera3sc1,'black')
-#coeff3_1 = a3_1,b3_1,c3_1,d3_1 = plane(pointsc1,camera3sc1,camera4sc1,'orange')
-#coeff4_1 = a4_1,b4_1,c4_1,d4_1 = plane(pointsc1,camera4sc1,camera1sc1,'gray')
 
-#coeff0_2 = a0_2,b0_2,c0_2,d0_2 = plane(camera1sc2,camera2sc2,camera3sc2,'yellow')
-#coeff1_2 = a1_2,b1_2,c1_2,d1_2 = plane(pointsc2,camera1sc2,camera2sc2,'green')
-#coeff2_2 = a2_2,b2_2,c2_2,d2_2 = plane(pointsc2,camera2sc2,camera3sc2,'black')
-#coeff3_2 = a3_2,b3_2,c3_2,d3_2 = plane(pointsc2,camera3sc2,camera4sc2,'orange')
-#coeff4_2 = a4_2,b4_2,c4_2,d4_2 = plane(pointsc2,camera4sc2,camera1sc2,'gray')
-
-#ax.scatter3D(camera1sc1_x,camera1sc1_y,camera1sc1_z,color = 'red')
-#ax.scatter3D(camera2sc1_x,camera2sc1_y,camera2sc1_z,color = 'red')
-#ax.scatter3D(camera3sc1_x,camera3sc1_y,camera3sc1_z,color = 'red')
-#ax.scatter3D(camera4sc1_x,camera4sc1_y,camera4sc1_z,color = 'red')
-
-#ax.plot3D([pointsc1_x,camera1sc1_x],[pointsc1_y,camera1sc1_y],[pointsc1_z,camera1sc1_z],color = 'red')
-#ax.plot3D([pointsc1_x,camera2sc1_x],[pointsc1_y,camera2sc1_y],[pointsc1_z,camera2sc1_z],color = 'red')
-#ax.plot3D([pointsc1_x,camera3sc1_x],[pointsc1_y,camera3sc1_y],[pointsc1_z,camera3sc1_z],color = 'red')
-#ax.plot3D([pointsc1_x,camera4sc1_x],[pointsc1_y,camera4sc1_y],[pointsc1_z,camera4sc1_z],color = 'red')
-#ax.plot3D([camera1sc1_x,camera2sc1_x,camera3sc1_x,camera4sc1_x,camera1sc1_x],
-#          [camera1sc1_y,camera2sc1_y,camera3sc1_y,camera4sc1_y,camera1sc1_y],
-#          [camera1sc1_z,camera2sc1_z,camera3sc1_z,camera4sc1_z,camera1sc1_z],color = 'red')
-
-#ax.scatter3D(camera1sc2_x,camera1sc2_y,camera1sc2_z,color = 'blue')
-#ax.scatter3D(camera2sc2_x,camera2sc2_y,camera2sc2_z,color = 'blue')
-#ax.scatter3D(camera3sc2_x,camera3sc2_y,camera3sc2_z,color = 'blue')
-#ax.scatter3D(camera4sc2_x,camera4sc2_y,camera4sc2_z,color = 'blue')
-
-#ax.plot3D([pointsc2_x,camera1sc2_x],[pointsc2_y,camera1sc2_y],[pointsc2_z,camera1sc2_z],color = 'blue')
-#ax.plot3D([pointsc2_x,camera2sc2_x],[pointsc2_y,camera2sc2_y],[pointsc2_z,camera2sc2_z],color = 'blue')
-#ax.plot3D([pointsc2_x,camera3sc2_x],[pointsc2_y,camera3sc2_y],[pointsc2_z,camera3sc2_z],color = 'blue')
-#ax.plot3D([pointsc2_x,camera4sc2_x],[pointsc2_y,camera4sc2_y],[pointsc2_z,camera4sc2_z],color = 'blue')
-#ax.plot3D([camera1sc2_x,camera2sc2_x,camera3sc2_x,camera4sc2_x,camera1sc2_x],
-#          [camera1sc2_y,camera2sc2_y,camera3sc2_y,camera4sc2_y,camera1sc2_y],
-#          [camera1sc2_z,camera2sc2_z,camera3sc2_z,camera4sc2_z,camera1sc2_z],color = 'blue')
+print(InsidePoint(intersection1))
 
 
 plt.show()
