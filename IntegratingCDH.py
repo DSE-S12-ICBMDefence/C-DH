@@ -73,11 +73,11 @@ pixel_data = pixel_data[1:]
 # y_1 = []
 # y_2 = []
 # y_t = []
-shape = np.shape(matrix[0])
+shape = np.shape(matrix[0]) #shape of the new matrix we want
 
 for row in range(1): #(len(pixel_data)):
 
-    new_matrix = [np.zeros((shape[0],shape[1],shape[2]))]
+    new_matrix = [np.zeros((shape[0],shape[1],shape[2]))] #new matrix so we can fill it with valid trajectories
     print(pixel_data[row,0]) #printing time stamp
 
     time.append(pixel_data[row,0]) #list of time
@@ -96,14 +96,14 @@ for row in range(1): #(len(pixel_data)):
         # if statement on field of view
         if mu < 0:
             if y_traj < y1 and y_traj > y2:
-                new_matrix = np.vstack((new_matrix, [trajectory]))
+                new_matrix = np.vstack((new_matrix, [trajectory])) #adding the good trajectories to the matrix
 
         if mu > 0:
             if y_traj > y1 and y_traj < y2:
-                new_matrix = np.vstack((new_matrix, [trajectory]))
+                new_matrix = np.vstack((new_matrix, [trajectory])) #adding the good trajectories to the matrix
 
 
-    matrix = new_matrix[1:]
+    matrix = new_matrix[1:] #removing first line bc it's all zeroes and then renaming it as the matrix so the loop can run again 
 
 #
 #     # print(matrix)
