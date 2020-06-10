@@ -13,7 +13,14 @@ from scipy import interpolate
 from Main_Trajectory import TrajectoryData
 from scipy import spatial
 
+def slicer(t,x,y):
+    a = list(t.astype(int))
+    starting_point = a.index(0)
+    sliced_t = t[(starting_point+1):]
+    sliced_x = x[(starting_point+1):]
+    sliced_y = y[(starting_point+1):]
 
+    return  sliced_t, sliced_x, sliced_y
 
 def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step):
 
@@ -47,6 +54,12 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
                     temp_y.append(yrot)
                     temp_t.append(t-dt)
 
+    for i  in range(len(temp_t)):
+        if temp_t[i][0]<0 :
+            sliced_t, sliced_x, sliced_y = slicer(temp_t[i],temp_x[i],temp_y[i])
+            temp_t[i] = sliced_t
+            temp_x[i] = sliced_x
+            temp_y[i] = sliced_y
 
     return temp_x,temp_y,temp_t
 
@@ -54,3 +67,7 @@ x,y,t = generate_trajectories(5,2,5, 10)
 for i in range(len(x)):
      plt.plot(x[i],y[i])
 plt.show()
+
+
+
+
