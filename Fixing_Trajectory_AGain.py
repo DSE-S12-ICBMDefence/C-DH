@@ -10,7 +10,7 @@ from scipy import interpolate
 # from Mass_extract_2 import Mass_t
 # from Velocity_Check import pixel_det
 # from Velocity_Check import pixel_data
-from Main_Trajectory import TrajectoryData
+from Better_Main_Trajectory import TrajectoryData
 from scipy import spatial
 
 def alitutde_slicer(t,x,y,h):
