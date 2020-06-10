@@ -63,10 +63,10 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     return temp_x,temp_y,temp_t
 
-x,y,t = generate_trajectories(5,2,5, 10)
-for i in range(len(x)):
-     plt.plot(x[i],y[i])
-plt.show()
+# x,y,t = generate_trajectories(5,2,5, 10)
+# for i in range(len(x)):
+#      plt.plot(x[i],y[i])
+# plt.show()
 
 
 

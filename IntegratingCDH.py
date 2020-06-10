@@ -14,6 +14,7 @@ from Velocity_Check import pixel_det
 from Velocity_Check import get_pixel_data
 # from Velocity_Check import theta
 from Main_Trajectory import TrajectoryData
+from Fixing_Trajectory_AGain import generate_trajectories
 
 rot_alt_step = 5
 rot_angle_step = 2
@@ -30,41 +31,6 @@ spot = np.array([0,Re])
 theta_0 = 1*pi/180 + pi/2 #rad
 
 
-
-def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step):
-
-    Re = 6370 * 1000  # m   #radius of the Earth
-    x_trans = np.linspace(0,2*pi-0.01,y_trans_step)
-    #theta is defined anti-clockwise from the positive x-axis
-
-    delta_t = np.linspace(0,10,10)
-
-    rot_alts = np.linspace(10000,100000,rot_alt_step)
-    rot_angles = np.linspace(15,40,rot_angle_step)*(pi/180)
-
-    temp_x = []
-    temp_y = []
-    temp_t = []
-    for alt in rot_alts:
-        for angle in rot_angles:
-            x, y, h, vx, vy, v, t = TrajectoryData(alt, angle, 0, Re)
-            xvector = np.zeros((len(x),3))
-            xvector[:,0] = x
-            xvector[:,1] = y
-            for theta_x in x_trans:
-                for dt in delta_t:
-                    transformationmatrix = sp.spatial.transform.Rotation.from_euler('z',theta_x).as_matrix()
-                    xvectorrot = np.einsum('ij,kj->ki',transformationmatrix,xvector)
-
-                    xrot = np.copy(xvectorrot[:,0])
-                    yrot = np.copy(xvectorrot[:,1])
-
-                    temp_x.append(xrot)
-                    temp_y.append(yrot)
-                    temp_t.append(t-dt)
-
-
-    return temp_x,temp_y,temp_t
 
 def compile_matrix(t,x,y):
     piece = np.array([[t],[x],[y]])
@@ -86,7 +52,17 @@ len_mat = []
 time = []
 
 while i<iterations:
-    piece = compile_matrix(t_new[i],x_new[i],y_new[i])
+
+    a = np.shape(t_new[i])
+
+    while a != np.shape(np.empty(92)):
+        t_new[i]=np.append(t_new[i], 0)
+        x_new[i]=np.append(x_new[i], 0)
+        y_new[i]=np.append(y_new[i], 0)
+        a = np.shape(t_new[i])
+
+    piece = compile_matrix(t_new[i], x_new[i], y_new[i])
+
     matrix[i,:,:,:] = piece
 
     i += 1
@@ -140,7 +116,7 @@ plt.show()
 
 
 
-
+#------------------old stuff ------------------------
 
 
 # def generate_trajectories(rot_alt_step,rot_angle_step):
