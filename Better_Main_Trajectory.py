@@ -3,12 +3,12 @@ import math as m
 import matplotlib.pyplot as plt
 import scipy as sp
 from scipy import interpolate
-from AverageThrust import AvgThurst
-from CdEstimator import CDfromM
+from AverageThrust_2 import AvgThurst
+from CdEstimator_2 import CDfromM
 #from ISA_2 import mass_time
-from ISA_2 import density_from_height
-from TempAlt import TFromH
-from Mass_extract_2 import massfunction
+from ISA_2_2 import density_from_height
+from TempAlt_2 import TFromH
+from Mass_extract_2_2 import massfunction
 # from Velocity_Check import pixel_det
 # from Velocity_Check import pixel_data
 import time
@@ -179,11 +179,11 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
         i+=1
     return [x,y,h,vx,vy,v,timestamp]
 
-N = 10000
-start = time.time()
-x,y,h,vx,vy,v,timestamp = TrajectoryData(rot_alt,np.linspace(0.2,40,num=N),x0,y0)
-end = time.time()
-print("It took", end-start, "s to calculate the trajectory of",N,"ICBMs")
+# N = 10000
+# start = time.time()
+# x,y,h,vx,vy,v,timestamp = TrajectoryData(rot_alt,np.linspace(0.2,40,num=N),x0,y0)
+# end = time.time()
+# print("It took", end-start, "s to calculate the trajectory of",N,"ICBMs")
 
 
 
