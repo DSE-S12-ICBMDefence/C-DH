@@ -58,7 +58,7 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     for alt in rot_alts:
         x, y, h, vx, vy, v, t = TrajectoryData(alt, rot_angles, 0, Re)
-        print(x, y, h)
+
         for i,angle in enumerate(rot_angles):
 
             xvector = np.zeros((len(x),3))
@@ -96,21 +96,21 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     return temp_x,temp_y,temp_t,temp_h
 
-<<<<<<< HEAD
 # <<<<<<< HEAD
-# # x,y,t = generate_trajectories(5,2,5, 10)
+# # <<<<<<< HEAD
+# # # x,y,t = generate_trajectories(5,2,5, 10)
+# # =======
+# # x,y,t,h = generate_trajectories(5,2,5, 10)
+# # >>>>>>> 8b345f06834fa4479955a5a21132e9976eb930a7
+# # # for i in range(len(x)):
+# # #      plt.plot(x[i],y[i])
+# # # plt.show()
 # =======
-# x,y,t,h = generate_trajectories(5,2,5, 10)
-# >>>>>>> 8b345f06834fa4479955a5a21132e9976eb930a7
+# x,y,t,h = generate_trajectories(5,100,5, 10)
 # # for i in range(len(x)):
 # #      plt.plot(x[i],y[i])
 # # plt.show()
-=======
-x,y,t,h = generate_trajectories(5,100,5, 10)
-# for i in range(len(x)):
-#      plt.plot(x[i],y[i])
-# plt.show()
->>>>>>> 0daf2666a060324c75e4e33b349ef99d957b69cd
+# >>>>>>> 0daf2666a060324c75e4e33b349ef99d957b69cd
 
 
 

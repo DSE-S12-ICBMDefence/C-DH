@@ -17,7 +17,7 @@ from Main_Trajectory import TrajectoryData
 from Fixing_Trajectory_AGain import generate_trajectories
 
 rot_alt_step = 5
-rot_angle_step = 2
+rot_angle_step = 100
 x_trans_step = 5
 y_trans_step = 10
 FOV_l   = -10*pi/180 #rad
@@ -46,8 +46,8 @@ y_new = np.array(y)
 
 iterations = rot_alt_step*rot_angle_step* x_trans_step*y_trans_step
 i = 0
-matrix = np.empty([iterations,3,1,len(t_new)+2])
-
+matrix = np.empty([iterations,3,1,90])
+#len(t_new[0])+2
 len_mat = []
 time = []
 
@@ -55,7 +55,7 @@ while i<iterations:
 
     a = np.shape(t_new[i])
 
-    while a != np.shape(np.empty(len(t_new)+2)):
+    while a != np.shape(np.empty(90)):
         t_new[i]=np.append(t_new[i], 0)
         x_new[i]=np.append(x_new[i], 0)
         y_new[i]=np.append(y_new[i], 0)
@@ -99,6 +99,9 @@ for row in range(len(pixel_data)):
                 matrix = np.delete(matrix,i,0)
 
         i = i+1
+
+    if len(matrix) == 0 :
+        break
 
     #print(matrix)
     print(len(matrix))
