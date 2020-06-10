@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 FOV_l   = -10*pi/180 #rad
 FOV_r   = +10*pi/180 #rad
 Re   = 6371 #km
-n_pix = 21
+n_pix = 1001
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
 t_0 = 0
-dt = 10 #s
+dt = 0.1 #s
 theta_0 = 1*pi/180 + pi/2 #rad
 
 # theta_end = -10*pi/180 + pi/2 #rad
@@ -86,7 +86,7 @@ t_0 = 0
 def get_pixel_data(t_0, running=True):
 
     t = t_0
-    dt = 1 #s
+    dt = 0.1 #s
     omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
 
     # pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])
@@ -126,7 +126,7 @@ def get_pixel_data(t_0, running=True):
             plt.plot(x,y1)
             plt.plot(x,y2)
 
-    plt.scatter(spot[0],spot[1])
+    # plt.scatter(spot[0],spot[1])
     # plt.title('')
     # plt.show()
 

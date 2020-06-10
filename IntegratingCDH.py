@@ -23,7 +23,7 @@ y_trans_step = 10
 FOV_l   = -10*pi/180 #rad
 FOV_r   = +10*pi/180 #rad
 Re   = 6371 #km
-n_pix = 21
+n_pix = 1001
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
@@ -38,7 +38,7 @@ def compile_matrix(t,x,y):
     return piece
 
 
-x,y,t = generate_trajectories(rot_alt_step,rot_angle_step, x_trans_step, y_trans_step)
+x,y,t,h_fun = generate_trajectories(rot_alt_step,rot_angle_step, x_trans_step, y_trans_step)
 
 t_new = np.array(t)
 x_new = np.array(x)
@@ -46,7 +46,7 @@ y_new = np.array(y)
 
 iterations = rot_alt_step*rot_angle_step* x_trans_step*y_trans_step
 i = 0
-matrix = np.empty([iterations,3,1,92])
+matrix = np.empty([iterations,3,1,len(t_new)+2])
 
 len_mat = []
 time = []
@@ -55,11 +55,12 @@ while i<iterations:
 
     a = np.shape(t_new[i])
 
-    while a != np.shape(np.empty(92)):
+    while a != np.shape(np.empty(len(t_new)+2)):
         t_new[i]=np.append(t_new[i], 0)
         x_new[i]=np.append(x_new[i], 0)
         y_new[i]=np.append(y_new[i], 0)
         a = np.shape(t_new[i])
+
 
     piece = compile_matrix(t_new[i], x_new[i], y_new[i])
 

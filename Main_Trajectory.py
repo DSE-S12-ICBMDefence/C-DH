@@ -81,7 +81,7 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
 
     turn = False
 
-    dt = 1 #s
+    dt = 0.1 #s
 
      #initial conditions
     # x and y coordinates are measured from the center of the earth
