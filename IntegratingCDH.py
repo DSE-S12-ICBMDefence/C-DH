@@ -31,27 +31,6 @@ theta_0 = 1*pi/180 + pi/2 #rad
 
 
 
-# def generate_trajectories(rot_alt_step,rot_angle_step):
-#
-#     rot_alts = np.linspace(10000,100000,rot_alt_step)
-#     rot_angles = np.linspace(15,40,rot_angle_step)
-#
-#     temp_x = []
-#     temp_y = []
-#     temp_t = []
-#     for alt in rot_alts:
-#         for angle in rot_angles:
-#             x, y, h, vx, vy, v,t = TrajectoryData(alt, angle)
-#             temp_x.append(x)
-#             temp_y.append(y)
-#             temp_t.append(t)
-#
-#
-#     return temp_x,temp_y,temp_t
-#
-#
-
-
 def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step):
 
     Re = 6370 * 1000  # m   #radius of the Earth
@@ -103,6 +82,9 @@ iterations = rot_alt_step*rot_angle_step* x_trans_step*y_trans_step
 i = 0
 matrix = np.empty([iterations,3,1,92])
 
+len_mat = []
+time = []
+
 while i<iterations:
     piece = compile_matrix(t_new[i],x_new[i],y_new[i])
     matrix[i,:,:,:] = piece
@@ -114,6 +96,8 @@ pixel_data = pixel_data[1:]
 
 for row in range(len(pixel_data)):
     print(pixel_data[row,0])
+    time.append(pixel_data[row,0])
+    len_mat.append(len(matrix))
     theta = pixel_data[row,-1]
     pix, m1, b1, m2, b2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
     i = 0
@@ -129,17 +113,21 @@ for row in range(len(pixel_data)):
 
 
         # if statement on field of view
-        if mu<0 and y_traj>y1 and y_traj<y2:
-           matrix = np.delete(matrix,i,0)
+        if mu<0:
+            if y_traj>y1 or y_traj<y2:
+                matrix = np.delete(matrix,i,0)
 
-        if mu>0 and y_traj < y1 and y_traj > y2:
-            matrix = np.delete(matrix,i,0)
+        if mu>0:
+            if y_traj < y1 or y_traj > y2:
+                matrix = np.delete(matrix,i,0)
 
         i = i+1
 
     #print(matrix)
     print(len(matrix))
 
+plt.plot(time, len_mat)
+plt.show()
 
 
 
@@ -154,6 +142,26 @@ for row in range(len(pixel_data)):
 
 
 
+
+# def generate_trajectories(rot_alt_step,rot_angle_step):
+#
+#     rot_alts = np.linspace(10000,100000,rot_alt_step)
+#     rot_angles = np.linspace(15,40,rot_angle_step)
+#
+#     temp_x = []
+#     temp_y = []
+#     temp_t = []
+#     for alt in rot_alts:
+#         for angle in rot_angles:
+#             x, y, h, vx, vy, v,t = TrajectoryData(alt, angle)
+#             temp_x.append(x)
+#             temp_y.append(y)
+#             temp_t.append(t)
+#
+#
+#     return temp_x,temp_y,temp_t
+#
+#
 
 
 
