@@ -10,13 +10,14 @@ from scipy import interpolate
 # from Mass_extract_2 import Mass_t
 # from Velocity_Check import pixel_det
 # from Velocity_Check import pixel_data
-from Main_Trajectory import TrajectoryData
+from Better_Main_Trajectory import TrajectoryData
 from scipy import spatial
 
 def alitutde_slicer(t,x,y,h):
-    a = h
-    rounded = [round(x,-3) for x in a]
-    starting_point = rounded.index(13000)
+    # a = list(h.astype(int))
+    # rounded = [round(x,-3) for x in a]
+    starting_point = np.argmax(h>13000)
+    #print(starting_point)
     h_sliced_t = t[(starting_point+1):]
     h_sliced_x = x[(starting_point+1):]
     h_sliced_y = y[(starting_point+1):]
@@ -56,11 +57,13 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
     temp_h = []
 
     for alt in rot_alts:
-        for angle in rot_angles:
-            x, y, h, vx, vy, v, t = TrajectoryData(alt, angle, 0, Re)
+        x, y, h, vx, vy, v, t = TrajectoryData(alt, rot_angles, 0, Re)
+        print(x, y, h)
+        for i,angle in enumerate(rot_angles):
+
             xvector = np.zeros((len(x),3))
-            xvector[:,0] = x
-            xvector[:,1] = y
+            xvector[:,0] = x[:,i]
+            xvector[:,1] = y[:,i]
             for theta_x in x_trans:
                 for dt in delta_t:
                     transformationmatrix = sp.spatial.transform.Rotation.from_euler('z',theta_x).as_matrix()
@@ -71,10 +74,11 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
                     temp_x.append(xrot)
                     temp_y.append(yrot)
-                    temp_t.append(t-dt)
-                    temp_h.append(h)
+                    temp_t.append(t[:,i]-dt)
+                    temp_h.append(h[:,i])
 
-    for i  in range(len(temp_h)):
+
+    for i in range(len(temp_h)):
         h_sliced_t, h_sliced_x, h_sliced_y,h_sliced_h = alitutde_slicer(temp_t[i],temp_x[i],temp_y[i],temp_h[i])
         temp_t[i] = h_sliced_t
         temp_x[i] = h_sliced_x
@@ -92,6 +96,7 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     return temp_x,temp_y,temp_t,temp_h
 
+<<<<<<< HEAD
 # <<<<<<< HEAD
 # # x,y,t = generate_trajectories(5,2,5, 10)
 # =======
@@ -100,6 +105,12 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 # # for i in range(len(x)):
 # #      plt.plot(x[i],y[i])
 # # plt.show()
+=======
+x,y,t,h = generate_trajectories(5,100,5, 10)
+# for i in range(len(x)):
+#      plt.plot(x[i],y[i])
+# plt.show()
+>>>>>>> 0daf2666a060324c75e4e33b349ef99d957b69cd
 
 
 
