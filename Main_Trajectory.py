@@ -9,8 +9,8 @@ from CdEstimator import Cd
 from ISA_2 import density_at_height
 from TempAlt import  Temp
 from Mass_extract_2 import Mass_t
-from Velocity_Check import pixel_det
-from Velocity_Check import pixel_data
+# from Velocity_Check import pixel_det
+# from Velocity_Check import pixel_data
 
 #----------SOLVING EOMs USING EULERS FORWARD INTEGRATION----------------------
 
@@ -81,7 +81,7 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
 
     turn = False
 
-    dt = 1 #s
+    dt = 0.1 #s
 
      #initial conditions
     # x and y coordinates are measured from the center of the earth

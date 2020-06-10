@@ -5,15 +5,14 @@ import matplotlib.pyplot as plt
 FOV_l   = -10*pi/180 #rad
 FOV_r   = +10*pi/180 #rad
 Re   = 6371 #km
-n_pix = 21
+n_pix = 1001
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
-theta_0 = 1*pi/180 + pi/2 #rad
-
 t_0 = 0
-dt = 10 #s
+dt = 0.1 #s
+theta_0 = 1*pi/180 + pi/2 #rad
 
 # theta_end = -10*pi/180 + pi/2 #rad
 
@@ -82,91 +81,57 @@ def pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix):
     # y2 = tan(eta2)*x2 + b
 
 # print(pixel_det(theta_0, spot, FOV, h, n_pix))
-
 running = True
 t_0 = 0
-t = t_0
-dt = 1 #s
-omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
+def get_pixel_data(t_0, running=True):
 
-# pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])
-pixel_data = np.array([0, 0, 0, 0,0])
+    t = t_0
+    dt = 0.1 #s
+    omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
 
-theta = theta_0
+    # pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])
+    pixel_data = np.array([0, 0, 0, 0,0,0])
 
-while running:
+    theta = theta_0
 
-    pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
+    while running:
 
-    new_data = np.array([t, grad1, int1, grad2, int2])
+        pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
 
-    update = np.vstack((pixel_data, new_data))
-
-    pixel_data = update
-
-
-
-    dtheta = omega_sat*dt
-    theta = theta - dtheta
-    t = t + dt
+        new_data = np.array([t, grad1, int1, grad2, int2, theta])
+        print(new_data)
+        update = np.vstack((pixel_data, new_data))
+        print(update)
+        pixel_data = update
+        print(pixel_data)
 
 
-    if grad1 > 100000:
-        running = False
-        pixel_data = pixel_data[:-1, :]
-        
-    #things to make a plot
-    if running:
-        if grad1*grad2<0:
-            x = np.linspace(-1,1,2)
-        else:
-            x = np.linspace(p[0],0,2)
-        y1 = grad1*x+int1
-        y2 = grad2*x+int2
-        plt.plot(x,y1)
-        plt.plot(x,y2)
+        dtheta = omega_sat*dt
+        theta = theta - dtheta
+        t = t + dt
 
-# plt.scatter(spot[0],spot[1])
-# plt.title('wowowowowowowow')
-# plt.show()
 
-# x = np.linspace(-20,20,10)
+        if grad1 > 100000:
+            running = False
+            pixel_data = pixel_data[:-1, :]
 
-# m1 = pixel_data[1:,1]
-# b1 = pixel_data[1:,2]
-# m2 = pixel_data[1:,3]
-# b2 = pixel_data[1:,4]
+        #things to make a plot
+        if running:
+            if grad1*grad2<0:
+                x = np.linspace(-1,1,2)
+            else:
+                x = np.linspace(p[0],0,2)
+            y1 = grad1*x+int1
+            y2 = grad2*x+int2
+            plt.plot(x,y1)
+            plt.plot(x,y2)
 
-# funys = []
-# for i in range(len(m1)):
+    # plt.scatter(spot[0],spot[1])
+    # plt.title('')
+    # plt.show()
 
-#     y2 = m1[i]*x + b1[i]
-#     funys.append(y2)
-
-# for plot in funys:
-#     plt.plot(x,plot)
-# plt.show()
-
-# for i in range(len(m2)):
-#
-#     y2 = m2[i]*x + b2[i]
-#
-#     plt.plot(x,y2)
-#     plt.show()
-#
-#
-# ytes = []
-# for i in range(len(x)):
-#     y = m1[i]*x[i] + b1[i]
-#     ytes.append(y)
-#
-# plt.plot(x,ytes)
-# plt.show()
-#
-# for i in range(len(m1)):
-#     y1 = []
-#     y1 = m1[i] * x + b1[i]
+    return(pixel_data)
 
 
 
-# def check_trajectory ():
+
