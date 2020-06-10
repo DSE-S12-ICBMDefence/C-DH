@@ -11,7 +11,7 @@ grav_c = 398600 #km^3 s^-2
 
 spot = np.array([0,Re])
 t_0 = 0
-dt = 0.1 #s
+dt = 1 #s
 theta_0 = 1*pi/180 + pi/2 #rad
 
 # theta_end = -10*pi/180 + pi/2 #rad
@@ -86,7 +86,7 @@ t_0 = 0
 def get_pixel_data(t_0, running=True):
 
     t = t_0
-    dt = 0.1 #s
+    dt = 1 #s
     omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
 
     # pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])

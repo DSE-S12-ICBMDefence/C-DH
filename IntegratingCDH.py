@@ -17,7 +17,7 @@ from Main_Trajectory import TrajectoryData
 from Fixing_Trajectory_AGain import generate_trajectories
 
 rot_alt_step = 5
-rot_angle_step = 100
+rot_angle_step = 2
 x_trans_step = 5
 y_trans_step = 10
 FOV_l   = -10*pi/180 #rad
@@ -46,7 +46,7 @@ y_new = np.array(y)
 
 iterations = rot_alt_step*rot_angle_step* x_trans_step*y_trans_step
 i = 0
-matrix = np.empty([iterations,3,1,90])
+matrix = np.empty([iterations,3,1,53])
 #len(t_new[0])+2
 len_mat = []
 time = []
@@ -55,12 +55,11 @@ while i<iterations:
 
     a = np.shape(t_new[i])
 
-    while a != np.shape(np.empty(90)):
+    while a != np.shape(np.empty(53)):
         t_new[i]=np.append(t_new[i], 0)
         x_new[i]=np.append(x_new[i], 0)
         y_new[i]=np.append(y_new[i], 0)
         a = np.shape(t_new[i])
-
 
     piece = compile_matrix(t_new[i], x_new[i], y_new[i])
 
@@ -71,44 +70,51 @@ while i<iterations:
 pixel_data = get_pixel_data(0, running=True)
 pixel_data = pixel_data[1:]
 
-for row in range(len(pixel_data)):
-    print(pixel_data[row,0])
-    time.append(pixel_data[row,0])
-    len_mat.append(len(matrix))
-    theta = pixel_data[row,-1]
-    pix, m1, b1, m2, b2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
-    i = 0
-    while i < len(matrix):
+# y_1 = []
+# y_2 = []
+# y_t = []
+shape = np.shape(matrix[0])
 
-        y1 = (pixel_data[row, 1]*matrix[i,1,0, row] + pixel_data[row,2])*1000
-        y2 = (pixel_data[row, 3]*matrix[i,1,0, row] + pixel_data[row,4])*1000
-        y_traj = matrix[i,2,0, row]
-        #
-        # y1 = 3
-        # y2 = 2
-        # y_traj = 2.5
+for row in range(1): #(len(pixel_data)):
+
+    new_matrix = [np.zeros((shape[0],shape[1],shape[2]))]
+    print(pixel_data[row,0]) #printing time stamp
+
+    time.append(pixel_data[row,0]) #list of time
+    len_mat.append(len(matrix)) #list of time
+    theta = pixel_data[row,-1] #theta for pixel_det
+
+    pix, m1, b1, m2, b2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix) #pixel det for mu
+
+    for trajectory in matrix:
+
+        y1 = (pixel_data[row, 1]*trajectory[1,0, row] + pixel_data[row,2])*1000
+        y2 = (pixel_data[row, 3]*trajectory[1,0, row] + pixel_data[row,4])*1000
+        y_traj = trajectory[2,0, row]
 
 
         # if statement on field of view
-        if mu<0:
-            if y_traj>y1 or y_traj<y2:
-                matrix = np.delete(matrix,i,0)
+        if mu < 0:
+            if y_traj < y1 and y_traj > y2:
+                new_matrix = np.vstack((new_matrix, [trajectory]))
 
-        if mu>0:
-            if y_traj < y1 or y_traj > y2:
-                matrix = np.delete(matrix,i,0)
+        if mu > 0:
+            if y_traj > y1 and y_traj < y2:
+                new_matrix = np.vstack((new_matrix, [trajectory]))
 
-        i = i+1
 
-    if len(matrix) == 0 :
-        break
+    matrix = new_matrix[1:]
 
-    #print(matrix)
-    print(len(matrix))
+#
+#     # print(matrix)
+#     print(len(matrix))
 
-plt.plot(time, len_mat)
-plt.show()
+# plt.plot(time, len_mat)
+# plt.show()
 
+# print(y_t - y_1)
+# print(y_t - y_2)
+# print(y_t)
 
 
 
