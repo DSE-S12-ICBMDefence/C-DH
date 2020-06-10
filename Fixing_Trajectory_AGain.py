@@ -13,14 +13,31 @@ from scipy import interpolate
 from Main_Trajectory import TrajectoryData
 from scipy import spatial
 
-def slicer(t,x,y):
+def alitutde_slicer(t,x,y,h):
+    a = h
+    rounded = [round(x,-3) for x in a]
+    starting_point = rounded.index(13000)
+    h_sliced_t = t[(starting_point+1):]
+    h_sliced_x = x[(starting_point+1):]
+    h_sliced_y = y[(starting_point+1):]
+    h_sliced_h = h[(starting_point+1):]
+
+    return h_sliced_t, h_sliced_x, h_sliced_y,h_sliced_h
+
+
+
+
+def slicer(t,x,y,h):
     a = list(t.astype(int))
     starting_point = a.index(0)
     sliced_t = t[(starting_point+1):]
     sliced_x = x[(starting_point+1):]
     sliced_y = y[(starting_point+1):]
+    sliced_h = h[(starting_point+1):]
 
-    return  sliced_t, sliced_x, sliced_y
+    return  sliced_t, sliced_x, sliced_y,sliced_h
+
+
 
 def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step):
 
@@ -28,7 +45,7 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
     x_trans = np.linspace(0,2*pi-0.01,y_trans_step)
     #theta is defined anti-clockwise from the positive x-axis
 
-    delta_t = np.linspace(0,10,10)
+    delta_t = np.linspace(35,50,5)
 
     rot_alts = np.linspace(10000,100000,rot_alt_step)
     rot_angles = np.linspace(15,40,rot_angle_step)*(pi/180)
@@ -36,6 +53,8 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
     temp_x = []
     temp_y = []
     temp_t = []
+    temp_h = []
+
     for alt in rot_alts:
         for angle in rot_angles:
             x, y, h, vx, vy, v, t = TrajectoryData(alt, angle, 0, Re)
@@ -53,20 +72,34 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
                     temp_x.append(xrot)
                     temp_y.append(yrot)
                     temp_t.append(t-dt)
+                    temp_h.append(h)
+
+    for i  in range(len(temp_h)):
+        h_sliced_t, h_sliced_x, h_sliced_y,h_sliced_h = alitutde_slicer(temp_t[i],temp_x[i],temp_y[i],temp_h[i])
+        temp_t[i] = h_sliced_t
+        temp_x[i] = h_sliced_x
+        temp_y[i] = h_sliced_y
+        temp_h[i] = h_sliced_h
+
 
     for i  in range(len(temp_t)):
         if temp_t[i][0]<0 :
-            sliced_t, sliced_x, sliced_y = slicer(temp_t[i],temp_x[i],temp_y[i])
+            sliced_t, sliced_x, sliced_y,sliced_h = slicer(temp_t[i],temp_x[i],temp_y[i],temp_h[i])
             temp_t[i] = sliced_t
             temp_x[i] = sliced_x
             temp_y[i] = sliced_y
+            temp_h[i] = sliced_h
 
-    return temp_x,temp_y,temp_t
+    return temp_x,temp_y,temp_t,temp_h
 
-# x,y,t = generate_trajectories(5,2,5, 10)
-# for i in range(len(x)):
-#      plt.plot(x[i],y[i])
-# plt.show()
+# <<<<<<< HEAD
+# # x,y,t = generate_trajectories(5,2,5, 10)
+# =======
+# x,y,t,h = generate_trajectories(5,2,5, 10)
+# >>>>>>> 8b345f06834fa4479955a5a21132e9976eb930a7
+# # for i in range(len(x)):
+# #      plt.plot(x[i],y[i])
+# # plt.show()
 
 
 
