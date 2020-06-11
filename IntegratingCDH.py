@@ -3,12 +3,12 @@ from math import *
 import matplotlib.pyplot as plt
 import scipy as sp
 from scipy import interpolate
-from AverageThrust import AvgThurst
-from CdEstimator import Cd
-#from ISA_2 import mass_time
-from ISA_2 import density_at_height
-from TempAlt import  Temp
-from Mass_extract_2 import Mass_t
+# from AverageThrust import AvgThurst
+# from CdEstimator import Cd
+# #from ISA_2 import mass_time
+# from ISA_2 import density_at_height
+# from TempAlt import  Temp
+# from Mass_extract_2 import Mass_t
 from Velocity_Check import pixel_det
 # from Velocity_Check import pixel_data
 from Velocity_Check import get_pixel_data
@@ -17,11 +17,11 @@ from Main_Trajectory import TrajectoryData
 from Fixing_Trajectory_AGain import generate_trajectories
 
 rot_alt_step = 5
-rot_angle_step = 2
+rot_angle_step = 10
 x_trans_step = 5
 y_trans_step = 10
-FOV_l   = -10*pi/180 #rad
-FOV_r   = +10*pi/180 #rad
+FOV_l   = -20*pi/180 #rad
+FOV_r   = +20*pi/180 #rad
 Re   = 6371 #km
 n_pix = 1001
 h = 1000 #km
@@ -40,22 +40,29 @@ def compile_matrix(t,x,y):
 
 x,y,t,h_fun = generate_trajectories(rot_alt_step,rot_angle_step, x_trans_step, y_trans_step)
 
+#looking at what trajectories we have
+for i in range(len(x)):
+     plt.plot(x[i],y[i])
+plt.show()
+
+
 t_new = np.array(t)
 x_new = np.array(x)
 y_new = np.array(y)
 
 iterations = rot_alt_step*rot_angle_step* x_trans_step*y_trans_step
 i = 0
-matrix = np.empty([iterations,3,1,53])
+matrix = np.empty([iterations,3,1,105])
 #len(t_new[0])+2
 len_mat = []
 time = []
+
 
 while i<iterations:
 
     a = np.shape(t_new[i])
 
-    while a != np.shape(np.empty(53)):
+    while a != np.shape(np.empty(105)):
         t_new[i]=np.append(t_new[i], 0)
         x_new[i]=np.append(x_new[i], 0)
         y_new[i]=np.append(y_new[i], 0)
@@ -70,9 +77,6 @@ while i<iterations:
 pixel_data = get_pixel_data(0, running=True)
 pixel_data = pixel_data[1:]
 
-# y_1 = []
-# y_2 = []
-# y_t = []
 shape = np.shape(matrix[0]) #shape of the new matrix we want
 
 for row in range(1): #(len(pixel_data)):
@@ -91,6 +95,7 @@ for row in range(1): #(len(pixel_data)):
         y1 = (pixel_data[row, 1]*trajectory[1,0, row] + pixel_data[row,2])*1000
         y2 = (pixel_data[row, 3]*trajectory[1,0, row] + pixel_data[row,4])*1000
         y_traj = trajectory[2,0, row]
+        print(y1,y2,y_traj)
 
 
         # if statement on field of view
@@ -103,15 +108,15 @@ for row in range(1): #(len(pixel_data)):
                 new_matrix = np.vstack((new_matrix, [trajectory])) #adding the good trajectories to the matrix
 
 
-    matrix = new_matrix[1:] #removing first line bc it's all zeroes and then renaming it as the matrix so the loop can run again 
+    matrix = new_matrix[1:] #removing first line bc it's all zeroes and then renaming it as the matrix so the loop can run again
 
 #
-#     # print(matrix)
-#     print(len(matrix))
+    # print(matrix)
+    print(len(matrix))
 
-# plt.plot(time, len_mat)
-# plt.show()
-
+plt.plot(time, len_mat)
+plt.show()
+#
 # print(y_t - y_1)
 # print(y_t - y_2)
 # print(y_t)

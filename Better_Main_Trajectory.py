@@ -47,7 +47,7 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
     turn = False
 
     dt = 1 #s
-    tmax = 90 #s
+    tmax = 140 #s
     Niter = int(tmax / dt) + 1
     nrot = np.size(rot_angle)
 
@@ -177,13 +177,9 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
 
 
         i+=1
-    return [x,y,h,vx,vy,v,timestamp]
+    return x,y,h,vx,vy,v,timestamp
 
-# N = 10000
-# start = time.time()
-# x,y,h,vx,vy,v,timestamp = TrajectoryData(rot_alt,np.linspace(0.2,40,num=N),x0,y0)
-# end = time.time()
-# print("It took", end-start, "s to calculate the trajectory of",N,"ICBMs")
+
 
 
 

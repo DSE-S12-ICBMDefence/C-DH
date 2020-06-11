@@ -43,10 +43,11 @@ def slicer(t,x,y,h):
 def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step):
 
     Re = 6370 * 1000  # m   #radius of the Earth
-    x_trans = np.linspace(0,2*pi-0.01,y_trans_step)
+    x_trans = np.linspace(-(pi/200),(pi/200),y_trans_step)
+
     #theta is defined anti-clockwise from the positive x-axis
 
-    delta_t = np.linspace(35,50,5)
+    delta_t = np.linspace(0,50,3)
 
     rot_alts = np.linspace(10000,100000,rot_alt_step)
     rot_angles = np.linspace(15,40,rot_angle_step)*(pi/180)
@@ -58,6 +59,7 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     for alt in rot_alts:
         x, y, h, vx, vy, v, t = TrajectoryData(alt, rot_angles, 0, Re)
+        print(x,y)
 
         for i,angle in enumerate(rot_angles):
 
@@ -77,13 +79,13 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
                     temp_t.append(t[:,i]-dt)
                     temp_h.append(h[:,i])
 
-
-    for i in range(len(temp_h)):
-        h_sliced_t, h_sliced_x, h_sliced_y,h_sliced_h = alitutde_slicer(temp_t[i],temp_x[i],temp_y[i],temp_h[i])
-        temp_t[i] = h_sliced_t
-        temp_x[i] = h_sliced_x
-        temp_y[i] = h_sliced_y
-        temp_h[i] = h_sliced_h
+    #
+    # for i in range(len(temp_h)):
+    #     h_sliced_t, h_sliced_x, h_sliced_y,h_sliced_h = alitutde_slicer(temp_t[i],temp_x[i],temp_y[i],temp_h[i])
+    #     temp_t[i] = h_sliced_t
+    #     temp_x[i] = h_sliced_x
+    #     temp_y[i] = h_sliced_y
+    #     temp_h[i] = h_sliced_h
 
 
     for i  in range(len(temp_t)):
@@ -96,21 +98,13 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     return temp_x,temp_y,temp_t,temp_h
 
-# <<<<<<< HEAD
-# # <<<<<<< HEAD
-# # # x,y,t = generate_trajectories(5,2,5, 10)
-# # =======
-# # x,y,t,h = generate_trajectories(5,2,5, 10)
-# # >>>>>>> 8b345f06834fa4479955a5a21132e9976eb930a7
-# # # for i in range(len(x)):
-# # #      plt.plot(x[i],y[i])
-# # # plt.show()
-# =======
-# x,y,t,h = generate_trajectories(5,100,5, 10)
-# # for i in range(len(x)):
-# #      plt.plot(x[i],y[i])
-# # plt.show()
-# >>>>>>> 0daf2666a060324c75e4e33b349ef99d957b69cd
+
+# x,y,t,h = generate_trajectories(5,10,5, 9)
+# for i in range(len(x)):
+#      plt.plot(x[i],y[i])
+# plt.show()
+#
+
 
 
 

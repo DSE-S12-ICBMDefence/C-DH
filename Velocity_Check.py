@@ -2,8 +2,9 @@ from math import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-FOV_l   = -10*pi/180 #rad
-FOV_r   = +10*pi/180 #rad
+
+FOV_l   = -20*pi/180 #rad
+FOV_r   = +20*pi/180 #rad
 Re   = 6371 #km
 n_pix = 1001
 h = 1000 #km
@@ -99,11 +100,11 @@ def get_pixel_data(t_0, running=True):
         pix, grad1, int1, grad2, int2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix)
 
         new_data = np.array([t, grad1, int1, grad2, int2, theta])
-        print(new_data)
+        #print(new_data)
         update = np.vstack((pixel_data, new_data))
-        print(update)
+       # print(update)
         pixel_data = update
-        print(pixel_data)
+        #print(pixel_data)
 
 
         dtheta = omega_sat*dt
