@@ -23,7 +23,7 @@ y_trans_step = 10
 FOV_l   = -20*pi/180 #rad
 FOV_r   = +20*pi/180 #rad
 Re   = 6371 #km
-n_pix = 1001
+n_pix = 21
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
@@ -97,6 +97,9 @@ for row in range(1): #(len(pixel_data)):
         y1 = (pixel_data[row, 1]*trajectory[1,0, row] + pixel_data[row,2])*1000
         y2 = (pixel_data[row, 3]*trajectory[1,0, row] + pixel_data[row,4])*1000
         y_traj = trajectory[2,0, row]
+
+        y_traj = Re*1000
+
 
         print(y1,y2,y_traj)
 

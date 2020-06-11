@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 FOV_l   = -20*pi/180 #rad
 FOV_r   = +20*pi/180 #rad
 Re   = 6371 #km
-n_pix = 1001
+n_pix = 21
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
