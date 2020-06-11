@@ -43,14 +43,11 @@ def slicer(t,x,y,h):
 def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step):
 
     Re = 6370 * 1000  # m   #radius of the Earth
-<<<<<<< HEAD
     x_trans = np.linspace(-(pi/200),(pi/200),y_trans_step)
-=======
-    x_trans = np.linspace(-pi/200,pi/200,y_trans_step)
->>>>>>> 4a5b4e7c8cf78c53a3d4e8a0600dd6635c4aaff0
+
     #theta is defined anti-clockwise from the positive x-axis
 
-    delta_t = np.linspace(35,50,10)
+    delta_t = np.linspace(0,50,3)
 
     rot_alts = np.linspace(10000,100000,rot_alt_step)
     rot_angles = np.linspace(15,40,rot_angle_step)*(pi/180)
@@ -101,19 +98,13 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     return temp_x,temp_y,temp_t,temp_h
 
-<<<<<<< HEAD
-x,y,t,h = generate_trajectories(5,10,5, 10)
-for i in range(len(x)):
-     plt.plot(x[i],y[i])
-plt.show()
-=======
 
-x,y,t,h = generate_trajectories(5,10,5, 9)
-for i in range(len(x)):
-     plt.plot(x[i],y[i])
-plt.show()
+# x,y,t,h = generate_trajectories(5,10,5, 9)
+# for i in range(len(x)):
+#      plt.plot(x[i],y[i])
+# plt.show()
+#
 
->>>>>>> 4a5b4e7c8cf78c53a3d4e8a0600dd6635c4aaff0
 
 
 

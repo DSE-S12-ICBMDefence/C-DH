@@ -19,17 +19,10 @@ from Fixing_Trajectory_AGain import generate_trajectories
 rot_alt_step = 5
 rot_angle_step = 10
 x_trans_step = 5
-<<<<<<< HEAD
 y_trans_step = 10
 FOV_l   = -20*pi/180 #rad
 FOV_r   = +20*pi/180 #rad
 Re   = 6371 #km
-=======
-y_trans_step = 9
-FOV_l   = -10*pi/180 #rad
-FOV_r   = +10*pi/180 #rad
-Re   = 6370 #km
->>>>>>> 4a5b4e7c8cf78c53a3d4e8a0600dd6635c4aaff0
 n_pix = 1001
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
@@ -46,6 +39,12 @@ def compile_matrix(t,x,y):
 
 
 x,y,t,h_fun = generate_trajectories(rot_alt_step,rot_angle_step, x_trans_step, y_trans_step)
+
+#looking at what trajectories we have
+for i in range(len(x)):
+     plt.plot(x[i],y[i])
+plt.show()
+
 
 t_new = np.array(t)
 x_new = np.array(x)
