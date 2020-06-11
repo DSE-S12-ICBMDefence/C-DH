@@ -86,7 +86,7 @@ t_0 = 0
 def get_pixel_data(t_0, running=True):
 
     t = t_0
-    dt = 0.1 #s
+    dt = 1 #s
     omega_sat = 1 / sqrt((Re + h) ** 3 / grav_c)  # rad/s
 
     # pixel_data = np.array(["Time",  "Gradient L1", "Intercept L1", "Gradient L2", "Intercept L2"])

@@ -32,7 +32,7 @@ def PerpendicularPlane(vector,point):
 
     Z = (d - a * X - b * Y) * 1. / c
     rgb = np.random.rand(3, )
-    ax.plot_surface(X, Y, Z, color=rgb)
+    #ax.plot_surface(X, Y, Z, color=rgb)
     return a,b,c,d
 
 ##Intersection point
@@ -66,6 +66,23 @@ def PointPerpendicularPlane(point,vector,normal):
     intersection = point+d*vector
     return intersection
 
+def Negative(coeff):
+    a = -coeff[0]
+    b = -coeff[1]
+    c = -coeff[2]
+    d = -coeff[3]
+    return a,b,c,d
+
+def InsidePoint(point,coeff):
+    epsilon = 10 ** (-3)
+    a,b,c,d = coeff
+    x,y,z = point
+    value = a*x+b*y+c*z-d
+    if value>-epsilon:
+        return True
+    else:
+        return False
+
 #Inputs for FOCUS payload
 Re = 6378 #[km]
 hsat = 1000 #[km]
@@ -83,7 +100,7 @@ lat2 = np.pi/180*65.2 #[rad]
 lon2 = 0 #[rad]
 
 ###Bright Pixel###
-latbright = np.pi/180*70 #[rad]
+latbright = np.pi/180*88 #[rad]
 lonbright = 0 #[rad]
 
 fig = plt.figure()
@@ -96,22 +113,22 @@ pointsc1 = pointsc1_x,pointsc1_y,pointsc1_z = radiussat*np.array([np.cos(lon1)*n
 pointsc2 = pointsc2_x,pointsc2_y,pointsc2_z = radiussat*np.array([np.cos(lon2)*np.cos(lat2),np.sin(lon2)*np.cos(lat2),np.sin(lat2)])
 pointpixel = pointpixel_x,pointpixel_y,pointpixel_z = radiusbright*np.array([np.cos(lonbright)*np.cos(latbright),np.sin(lonbright)*np.cos(latbright),np.sin(latbright)])
 
-ax.set_xlim([pointpixel_x-1,pointpixel_x+1])
-ax.set_ylim([pointpixel_y-1,pointpixel_y+1])
-ax.set_zlim([pointpixel_z-1,pointpixel_z+1])
+#ax.set_xlim([pointpixel_x-1,pointpixel_x+1])
+#ax.set_ylim([pointpixel_y-1,pointpixel_y+1])
+#ax.set_zlim([pointpixel_z-1,pointpixel_z+1])
 
 ax.scatter3D(pointsc1_x,pointsc1_y,pointsc1_z,color = 'red')
 ax.scatter3D(pointsc2_x,pointsc2_y,pointsc2_z,color = 'blue')
 ax.scatter3D(pointpixel_x,pointpixel_y,pointpixel_z,color = 'black')
 
-print(pointpixel)
-
-ax.plot3D([pointsc1_x,pointpixel_x],[pointsc1_y,pointpixel_y],[pointsc1_z,pointpixel_z],color = 'red')
-ax.plot3D([pointsc2_x,pointpixel_x],[pointsc2_y,pointpixel_y],[pointsc2_z,pointpixel_z],color = 'blue')
+#ax.plot3D([pointsc1_x,pointpixel_x],[pointsc1_y,pointpixel_y],[pointsc1_z,pointpixel_z],color = 'red')
+#ax.plot3D([pointsc2_x,pointpixel_x],[pointsc2_y,pointpixel_y],[pointsc2_z,pointpixel_z],color = 'blue')
 
 vectorsc1 = pointsc1-pointpixel
 vectorsc2 = pointsc2-pointpixel
+print(np.linalg.norm(vectorsc1),np.linalg.norm(vectorsc2))
 
+###TRANSFORMATION OF THESE VECTORS DOES NOT WORK OR IT GIVES THE WRONG DIRECTION AS THE SC2 SHOULD HAVE LESS AREA THAN SC1
 camera1vector1 = camera1vector1_x,camera1vector1_y,camera1vector1_z= np.dot(TransformationFoV(FoV/2,FoV/2),vectorsc1)
 camera2vector1 = camera2vector1_x,camera2vector1_y,camera2vector1_z= np.dot(TransformationFoV(-FoV/2,FoV/2),vectorsc1)
 camera3vector1 = camera3vector1_x,camera3vector1_y,camera3vector1_z= np.dot(TransformationFoV(FoV/2,-FoV/2),vectorsc1)
@@ -128,20 +145,20 @@ ax.scatter3D(pointsc1_x-camera2vector1_x,pointsc1_y-camera2vector1_y,pointsc1_z-
 ax.scatter3D(pointsc1_x-camera3vector1_x,pointsc1_y-camera3vector1_y,pointsc1_z-camera3vector1_z,color = 'yellow')
 ax.scatter3D(pointsc1_x-camera4vector1_x,pointsc1_y-camera4vector1_y,pointsc1_z-camera4vector1_z,color = 'pink')
 
-ax.plot3D([pointsc2_x,pointsc2_x-camera1vector2_x],[pointsc2_y,pointsc2_y-camera1vector2_y],[pointsc2_z,pointsc2_z-camera1vector2_z],color = 'black')
+ax.plot3D([pointsc2_x,pointsc2_x-camera1vector2_x],[pointsc2_y,pointsc2_y-camera1vector2_y],[pointsc2_z,pointsc2_z-camera1vector2_z],color = 'blue')
 ax.scatter3D(pointsc2_x-camera1vector2_x,pointsc2_y-camera1vector2_y,pointsc2_z-camera1vector2_z,color = 'black')
 ax.scatter3D(pointsc2_x-camera2vector2_x,pointsc2_y-camera2vector2_y,pointsc2_z-camera2vector2_z,color = 'green')
 ax.scatter3D(pointsc2_x-camera3vector2_x,pointsc2_y-camera3vector2_y,pointsc2_z-camera3vector2_z,color = 'yellow')
 ax.scatter3D(pointsc2_x-camera4vector2_x,pointsc2_y-camera4vector2_y,pointsc2_z-camera4vector2_z,color = 'pink')
 
 plane1sc1 = a1sc1,b1sc1,c1sc1,d1sc1 = Plane(pointsc1,pointsc1-camera1vector1,pointsc1-camera2vector1,'black')
-plane2sc1 = a2sc1,b2sc1,c2sc1,d2sc1 = Plane(pointsc1,pointsc1-camera2vector1,pointsc1-camera3vector1,'green')
+plane2sc1 = a2sc1,b2sc1,c2sc1,d2sc1 = Negative(Negative(Plane(pointsc1,pointsc1-camera2vector1,pointsc1-camera3vector1,'green')))
 plane3sc1 = a3sc1,b3sc1,c3sc1,d3sc1 = Plane(pointsc1,pointsc1-camera3vector1,pointsc1-camera4vector1,'yellow')
-plane4sc1 = a4sc1,b4sc1,c4sc1,d4sc1 = Plane(pointsc1,pointsc1-camera4vector1,pointsc1-camera1vector1,'pink')
+plane4sc1 = a4sc1,b4sc1,c4sc1,d4sc1 = Negative(Negative(Plane(pointsc1,pointsc1-camera4vector1,pointsc1-camera1vector1,'pink')))
 
-plane1sc2 = a1sc2,b1sc2,c1sc2,d1sc2 = Plane(pointsc2,pointsc2-camera1vector2,pointsc2-camera2vector2,'black')
+plane1sc2 = a1sc2,b1sc2,c1sc2,d1sc2 = Negative(Negative(Plane(pointsc2,pointsc2-camera1vector2,pointsc2-camera2vector2,'black')))
 plane2sc2 = a2sc2,b2sc2,c2sc2,d2sc2 = Plane(pointsc2,pointsc2-camera2vector2,pointsc2-camera3vector2,'green')
-plane3sc2 = a3sc2,b3sc2,c3sc2,d3sc2 = Plane(pointsc2,pointsc2-camera3vector2,pointsc2-camera4vector2,'yellow')
+plane3sc2 = a3sc2,b3sc2,c3sc2,d3sc2 = Negative(Negative(Plane(pointsc2,pointsc2-camera3vector2,pointsc2-camera4vector2,'yellow')))
 plane4sc2 = a4sc2,b4sc2,c4sc2,d4sc2 = Plane(pointsc2,pointsc2-camera4vector2,pointsc2-camera1vector2,'pink')
 
 intersection1 = Intersection(plane1sc1,plane1sc2,plane2sc1)
@@ -161,25 +178,24 @@ intersection14 = Intersection(plane3sc1,plane3sc2,plane2sc2)
 intersection15 = Intersection(plane3sc1,plane3sc2,plane4sc1)
 intersection16 = Intersection(plane3sc1,plane3sc2,plane4sc2)
 
-def InsidePoint(point,coeff,direction):
-    epsilon = 10 ** (-5)
-    a,b,c,d = coeff
-    x,y,z = point
-    value = a*x+b*y+c*z+d
-    if direction=='right':
-        if value>-epsilon:
-            return True
-        else:
-            return False
-    elif direction=='left':
-        if value<epsilon:
-            return True
-        else:
-            return False
+intersections = np.array([intersection1,intersection2,intersection3,intersection4,intersection5,intersection6,intersection7,intersection8,intersection9,intersection10,intersection11,intersection12,intersection13,intersection14,intersection15,intersection16])
+planes = np.array([plane1sc1,plane2sc1,plane3sc1,plane4sc1,plane1sc2,plane2sc2,plane3sc2,plane4sc2])
+matrix = np.zeros((len(planes),len(intersections)))
+
+for row in range(0,len(planes)):
+    for column in range(0,len(intersections)):
+        #print(InsidePoint(intersections[column],planes[row]))
+        matrix[row][column] = InsidePoint(intersections[column],planes[row])
+
+##CHECK for the normal vector###
+#fig = plt.figure(2)
+#ax1 = fig.add_subplot(111, projection='3d')
+#X, Y = np.meshgrid(np.linspace(-0.25, 0.25, 2), np.linspace(-0.25, 0.25, 2))
+#Z = (d4sc2 - a4sc2 * X - b4sc2 * Y) * 1. / c4sc2
+#ax1.plot_surface(X, Y, Z,color='black')
+#Z1 = (d4sc2+50 - a4sc2 * X - b4sc2 * Y) * 1. / c4sc2
+#ax1.plot_surface(X, Y, Z1,color='yellow')
 
 
-print(InsidePoint(intersection1))
 
-
-plt.show()
 
