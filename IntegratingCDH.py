@@ -15,20 +15,21 @@ from Velocity_Check import get_pixel_data
 # from Velocity_Check import theta
 from Main_Trajectory import TrajectoryData
 from Fixing_Trajectory_AGain import generate_trajectories
+from Velocity_Check import FOV_l,FOV_r,Re,n_pix,h,grav_c,spot,theta_0
 
-rot_alt_step = 5
+rot_alt_step = 1000
 rot_angle_step = 10
-x_trans_step = 5
-y_trans_step = 10
-FOV_l   = -20*pi/180 #rad
-FOV_r   = +20*pi/180 #rad
-Re   = 6371 #km
-n_pix = 21
-h = 1000 #km
-grav_c = 398600 #km^3 s^-2
-
-spot = np.array([0,Re])
-theta_0 = 1*pi/180 + pi/2 #rad
+x_trans_step = 1
+y_trans_step = 101
+# FOV_l   = -20*pi/180 #rad
+# FOV_r   = +20*pi/180 #rad
+# Re   = 6371 #km
+# n_pix = 1001
+# h = 1000 #km
+# grav_c = 398600 #km^3 s^-2
+#
+# spot = np.array([0,Re])
+# theta_0 = -3*pi/180 + pi/2 #rad
 
 
 
@@ -52,7 +53,7 @@ y_new = np.array(y)
 
 iterations = rot_alt_step*rot_angle_step*y_trans_step
 i = 0
-matrix = np.empty([iterations,3,1,91])
+matrix = np.empty([iterations,3,1,53])
 #len(t_new[0])+2
 len_mat = []
 time = []
@@ -62,46 +63,57 @@ while i<iterations:
 
     a = np.shape(t_new[i])
 
-    while a != np.shape(np.empty(91)):
-        t_new[i]=np.append(t_new[i], 0)
-        x_new[i]=np.append(x_new[i], 0)
-        y_new[i]=np.append(y_new[i], 0)
-        a = np.shape(t_new[i])
+    # while a != np.shape(np.empty(91)):
+    #     t_new[i]=np.append(t_new[i], 0)
+    #     x_new[i]=np.append(x_new[i], 0)
+    #     y_new[i]=np.append(y_new[i], 0)
+    #     a = np.shape(t_new[i])
 
 
     piece = compile_matrix(t_new[i], x_new[i], y_new[i])
+    # print(piece)
 
     matrix[i,:,:,:] = piece
 
     i += 1
 
-# print(matrix)
+
+
 pixel_data = get_pixel_data(0, running=True)
 pixel_data = pixel_data[1:]
 
 shape = np.shape(matrix[0]) #shape of the new matrix we want
 
-for row in range(1): #(len(pixel_data)):
+for row in range(len(pixel_data)):
 
     new_matrix = [np.zeros((shape[0],shape[1],shape[2]))] #new matrix so we can fill it with valid trajectories
-    #print(pixel_data[row,0]) #printing time stamp
+    print("t=", pixel_data[row,0]) #printing time stamp
 
     time.append(pixel_data[row,0]) #list of time
     len_mat.append(len(matrix)) #list of time
     theta = pixel_data[row,-1] #theta for pixel_det
 
     pix, m1, b1, m2, b2, mu, p = pixel_det(theta, spot, FOV_l, FOV_r, h, n_pix) #pixel det for mu
-
+    # print(matrix)
+    # print('theta is',theta*180/pi)
     for trajectory in matrix:
+        # print('here goes the new one')
+        # print(trajectory)
 
         y1 = (pixel_data[row, 1]*trajectory[1,0, row] + pixel_data[row,2])*1000
         y2 = (pixel_data[row, 3]*trajectory[1,0, row] + pixel_data[row,4])*1000
+
+        y10 = (pixel_data[row, 1] * trajectory[1, 0, row]*0 + pixel_data[row, 2]) * 1000
+        y20 = (pixel_data[row, 3] * trajectory[1, 0, row]*0 + pixel_data[row, 4]) * 1000
+        # print(trajectory[1,0, row],trajectory[2,0, row])
+        # print('the range in which it can fall is ',y2-y1,'meters big')
+        # print('between',y10,'and',y20)
         y_traj = trajectory[2,0, row]
 
-        y_traj = Re*1000
+        # y_traj = Re*1000
 
 
-        print(y1,y2,y_traj)
+        # print(y1,y2,y_traj)
 
         # if statement on field of view
         if mu < 0:
@@ -115,9 +127,9 @@ for row in range(1): #(len(pixel_data)):
 
     matrix = new_matrix[1:] #removing first line bc it's all zeroes and then renaming it as the matrix so the loop can run again
 
-#
+
     # print(matrix)
-    # print(len(matrix))
+    print(len(matrix))
 #
 # plt.plot(time, len_mat)
 # plt.show()

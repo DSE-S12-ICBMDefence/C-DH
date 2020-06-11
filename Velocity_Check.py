@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 
 FOV_l   = -20*pi/180 #rad
 FOV_r   = +20*pi/180 #rad
-Re   = 6371 #km
-n_pix = 21
+Re   = 6370 #km
+n_pix = 1001
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
 
-spot = np.array([0,Re])
+spot = np.array([0,Re+13])
 t_0 = 0
 dt = 1 #s
 theta_0 = 1*pi/180 + pi/2 #rad
@@ -34,9 +34,9 @@ def pixel_det(theta, spot, FOV_l, FOV_r, h,n_pix):
     # print(len(angle_pix))
 
     if d_x > 0:
-        mu = acos((d**2 + (Re+h)**2 - Re**2)/(2*d*(Re+h)))
+        mu = acos((d**2 + (Re+h)**2 - spot[1]**2)/(2*d*(Re+h)))
     elif d_x <= 0:
-        mu = -acos((d ** 2 + (Re + h) ** 2 - Re ** 2) / (2 * d * (Re + h)))
+        mu = -acos((d ** 2 + (Re + h) ** 2 - spot[1] ** 2) / (2 * d * (Re + h)))
         
     if mu < FOV_r and mu > FOV_l:
         i = 0
@@ -127,9 +127,9 @@ def get_pixel_data(t_0, running=True):
             plt.plot(x,y1)
             plt.plot(x,y2)
 
-    # plt.scatter(spot[0],spot[1])
-    # plt.title('')
-    # plt.show()
+    plt.scatter(spot[0],spot[1])
+    plt.title('')
+    plt.show()
 
     return(pixel_data)
 
