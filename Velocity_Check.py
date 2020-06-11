@@ -2,9 +2,15 @@ from math import *
 import numpy as np
 import matplotlib.pyplot as plt
 
+<<<<<<< HEAD
 FOV_l   = -20*pi/180 #rad
 FOV_r   = +20*pi/180 #rad
 Re   = 6371 #km
+=======
+FOV_l   = -10*pi/180 #rad
+FOV_r   = +10*pi/180 #rad
+Re   = 6370 #km
+>>>>>>> 4a5b4e7c8cf78c53a3d4e8a0600dd6635c4aaff0
 n_pix = 1001
 h = 1000 #km
 grav_c = 398600 #km^3 s^-2
