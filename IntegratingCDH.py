@@ -3,12 +3,12 @@ from math import *
 import matplotlib.pyplot as plt
 import scipy as sp
 from scipy import interpolate
-from AverageThrust import AvgThurst
-from CdEstimator import Cd
-#from ISA_2 import mass_time
-from ISA_2 import density_at_height
-from TempAlt import  Temp
-from Mass_extract_2 import Mass_t
+# from AverageThrust import AvgThurst
+# from CdEstimator import Cd
+# #from ISA_2 import mass_time
+# from ISA_2 import density_at_height
+# from TempAlt import  Temp
+# from Mass_extract_2 import Mass_t
 from Velocity_Check import pixel_det
 # from Velocity_Check import pixel_data
 from Velocity_Check import get_pixel_data
@@ -20,8 +20,8 @@ rot_alt_step = 5
 rot_angle_step = 100
 x_trans_step = 5
 y_trans_step = 10
-FOV_l   = -10*pi/180 #rad
-FOV_r   = +10*pi/180 #rad
+FOV_l   = -20*pi/180 #rad
+FOV_r   = +20*pi/180 #rad
 Re   = 6371 #km
 n_pix = 1001
 h = 1000 #km

@@ -177,7 +177,7 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
 
 
         i+=1
-    return [x,y,h,vx,vy,v,timestamp]
+    return x,y,h,vx,vy,v,timestamp
 
 # N = 10000
 # start = time.time()
