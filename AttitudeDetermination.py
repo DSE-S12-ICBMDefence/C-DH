@@ -38,19 +38,51 @@ print("MOI including solar arrays: ",I_solarpanel)
 #beta around x
 
 #Determine the time sum of two attitude manouvres
-def AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,alpha,beta,gamma):
-    time1 = math.sqrt(4*beta*Ixx/Torque)
-    time2 = math.sqrt(4*alpha*Iyy/Torque)
+def AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,Momentum,alpha,beta,gamma):
+    time1 = math.sqrt(4*alpha*Ixx/Torque)
+    time2 = math.sqrt(4*beta*Iyy/Torque)
     time3 = math.sqrt(4*gamma*Izz/Torque)
+
+    if Momentum/Ixx>Torque/(2*Ixx)*time1:
+        velocity1 = Torque/(2*Ixx)*time1
+    else:
+        accelaration1 = Torque/Ixx
+        velocity1 = Momentum/Ixx
+        time1_triangle = velocity1/accelaration1
+        time1_rectangle = (alpha-time1_triangle/2*velocity1)/velocity1
+        time1 = time1_triangle+time1_rectangle
+
+    if Momentum/Iyy>Torque/(2*Iyy)*time2:
+        velocity2 = Torque/(2*Iyy)*time2
+    else:
+        accelaration2 = Torque/Iyy
+        velocity2 = Momentum/Iyy
+        time2_triangle = velocity2/accelaration2
+        time2_rectangle = (beta-time2_triangle/2*velocity2)/velocity2
+        time2 = time2_triangle+time2_rectangle
+
+    if Momentum/Izz>Torque/(2*Izz)*time3:
+        time3 = math.sqrt(4*gamma*Izz/Torque)
+        velocity3 = Torque/(2*Izz)*time3
+    else:
+        accelaration3 = Torque/Izz
+        velocity3 = Momentum/Izz
+        time3_triangle = velocity3/accelaration3
+        time3_rectangle = (gamma-time3_triangle/2*velocity3)/velocity3
+        time3 = time3_triangle+time3_rectangle
+        
     time = time1 + time2 + time3
-    return time
+    maxradialvelocity = max(velocity1,velocity2,velocity3)
+    return time, maxradialvelocity
 
 Ixx = I_solarpanel[0][0]
 Iyy = I_solarpanel[1][1]
 Izz = I_solarpanel[2][2]
+Momentum = 0.1 #[Nms]
 Torque = 0.007 #[Nm]
 alpha = np.pi/180*0 #[rad]
 beta = np.pi/180*0 #[rad]
-gamma = np.pi/180*180 #[rad]
+gamma = np.pi/180*360 #[rad]
 
-print("Total Time: ",AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,alpha,beta,gamma))
+print("Total Time: ",AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,Momentum,alpha,beta,gamma)[0]," [s]")
+print("Maximum Radial Velocity: ",AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,Momentum,alpha,beta,gamma)[1]*180/np.pi," [deg/s]")
