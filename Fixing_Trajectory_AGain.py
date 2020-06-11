@@ -59,7 +59,7 @@ def generate_trajectories(rot_alt_step,rot_angle_step,x_trans_step, y_trans_step
 
     for alt in rot_alts:
         x, y, h, vx, vy, v, t = TrajectoryData(alt, rot_angles, 0, Re)
-        print(x,y)
+        # print(x,y)
 
         for i,angle in enumerate(rot_angles):
 

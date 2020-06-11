@@ -41,18 +41,18 @@ def compile_matrix(t,x,y):
 x,y,t,h_fun = generate_trajectories(rot_alt_step,rot_angle_step, x_trans_step, y_trans_step)
 
 #looking at what trajectories we have
-for i in range(len(x)):
-     plt.plot(x[i],y[i])
-plt.show()
+# for i in range(len(x)):
+#      plt.plot(x[i],y[i])
+# plt.show()
 
 
 t_new = np.array(t)
 x_new = np.array(x)
 y_new = np.array(y)
 
-iterations = rot_alt_step*rot_angle_step* x_trans_step*y_trans_step
+iterations = rot_alt_step*rot_angle_step*y_trans_step
 i = 0
-matrix = np.empty([iterations,3,1,105])
+matrix = np.empty([iterations,3,1,91])
 #len(t_new[0])+2
 len_mat = []
 time = []
@@ -62,11 +62,12 @@ while i<iterations:
 
     a = np.shape(t_new[i])
 
-    while a != np.shape(np.empty(105)):
+    while a != np.shape(np.empty(91)):
         t_new[i]=np.append(t_new[i], 0)
         x_new[i]=np.append(x_new[i], 0)
         y_new[i]=np.append(y_new[i], 0)
         a = np.shape(t_new[i])
+
 
     piece = compile_matrix(t_new[i], x_new[i], y_new[i])
 
@@ -74,6 +75,7 @@ while i<iterations:
 
     i += 1
 
+# print(matrix)
 pixel_data = get_pixel_data(0, running=True)
 pixel_data = pixel_data[1:]
 
@@ -82,7 +84,7 @@ shape = np.shape(matrix[0]) #shape of the new matrix we want
 for row in range(1): #(len(pixel_data)):
 
     new_matrix = [np.zeros((shape[0],shape[1],shape[2]))] #new matrix so we can fill it with valid trajectories
-    print(pixel_data[row,0]) #printing time stamp
+    #print(pixel_data[row,0]) #printing time stamp
 
     time.append(pixel_data[row,0]) #list of time
     len_mat.append(len(matrix)) #list of time
@@ -95,8 +97,8 @@ for row in range(1): #(len(pixel_data)):
         y1 = (pixel_data[row, 1]*trajectory[1,0, row] + pixel_data[row,2])*1000
         y2 = (pixel_data[row, 3]*trajectory[1,0, row] + pixel_data[row,4])*1000
         y_traj = trajectory[2,0, row]
-        print(y1,y2,y_traj)
 
+        print(y1,y2,y_traj)
 
         # if statement on field of view
         if mu < 0:
@@ -112,10 +114,10 @@ for row in range(1): #(len(pixel_data)):
 
 #
     # print(matrix)
-    print(len(matrix))
-
-plt.plot(time, len_mat)
-plt.show()
+    # print(len(matrix))
+#
+# plt.plot(time, len_mat)
+# plt.show()
 #
 # print(y_t - y_1)
 # print(y_t - y_2)

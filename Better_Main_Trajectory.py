@@ -47,7 +47,7 @@ def TrajectoryData(rot_alt,rot_angle,x0,y0):
     turn = False
 
     dt = 1 #s
-    tmax = 140 #s
+    tmax = 90 #s
     Niter = int(tmax / dt) + 1
     nrot = np.size(rot_angle)
 
