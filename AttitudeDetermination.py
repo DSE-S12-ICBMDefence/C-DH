@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 #Mass in kg
 
@@ -34,23 +35,78 @@ I_solarpanel = I+np.array([[1/12*mass_solarpanel*(height_solarpanel**2+thickness
 
 print("MOI including solar arrays: ",I_solarpanel)
 
-#alpha around y
-#beta around x
-
 #Determine the time sum of two attitude manouvres
-def AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,alpha,beta,gamma):
-    time1 = math.sqrt(4*beta*Ixx/Torque)
-    time2 = math.sqrt(4*alpha*Iyy/Torque)
+def AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,Momentum,alpha,beta,gamma):
+    time1 = math.sqrt(4*alpha*Ixx/Torque)
+    time2 = math.sqrt(4*beta*Iyy/Torque)
     time3 = math.sqrt(4*gamma*Izz/Torque)
+
+    plt.figure(1)
+    plt.title("X-Axis")
+    plt.xlabel("Time [s]")
+    plt.ylabel("Angular Velocity [rad/s]")
+    if Momentum/Ixx>Torque/(2*Ixx)*time1:
+        velocity1 = Torque/(2*Ixx)*time1
+        plt.plot([0,time1/2,time1],[0,velocity1,0],'r-')
+        print("Time1: {0}[s] & Velocity1: {1}[deg/s]".format(time1,velocity1*180/np.pi))
+    else:
+        accelaration1 = Torque/Ixx
+        velocity1 = Momentum/Ixx
+        time1_triangle = velocity1/accelaration1
+        time1_rectangle = (alpha-time1_triangle*velocity1)/velocity1
+        time1 = 2*time1_triangle+time1_rectangle
+        plt.plot([0,time1_triangle,time1_triangle+time1_rectangle,time1],[0,velocity1,velocity1,0],'b-')
+        print("Time1: {0}[s] & Velocity1: {1}[deg/s]".format(time1, velocity1*180/np.pi))
+
+    plt.figure(2)
+    plt.title("Y-Axis")
+    plt.xlabel("Time [s]")
+    plt.ylabel("Angular Velocity [rad/s]")
+    if Momentum/Iyy>Torque/(2*Iyy)*time2:
+        velocity2 = Torque/(2*Iyy)*time2
+        plt.plot([0, time2 / 2, time2], [0, velocity2, 0], 'r-')
+        print("Time2: {0}[s] & Velocity2: {1}[deg/s]".format(time2, velocity2 * 180 / np.pi))
+    else:
+        accelaration2 = Torque/Iyy
+        velocity2 = Momentum/Iyy
+        time2_triangle = velocity2/accelaration2
+        time2_rectangle = (beta-time2_triangle/velocity2)/velocity2
+        time2 = 2*time2_triangle+time2_rectangle
+        plt.plot([0,time2_triangle,time2_triangle+time2_rectangle,time2],[0,velocity2,velocity2,0],'b-')
+        print("Time2: {0}[s] & Velocity2: {1}[deg/s]".format(time2, velocity2 * 180 / np.pi))
+
+    plt.figure(3)
+    plt.title("Z-Axis")
+    plt.xlabel("Time [s]")
+    plt.ylabel("Angular Velocity [rad/s]")
+    if Momentum/Izz>Torque/(2*Izz)*time3:
+        time3 = math.sqrt(4*gamma*Izz/Torque)
+        velocity3 = Torque/(2*Izz)*time3
+        plt.plot([0, time3 / 2, time3], [0, velocity3, 0], 'r-')
+        print("Time3: {0}[s] & Velocity3: {1}[deg/s]".format(time3, velocity3 * 180 / np.pi))
+    else:
+        accelaration3 = Torque/Izz
+        velocity3 = Momentum/Izz
+        time3_triangle = velocity3/accelaration3
+        time3_rectangle = (gamma-time3_triangle*velocity3)/velocity3
+        time3 = 2*time3_triangle+time3_rectangle
+        plt.plot([0, time3_triangle, time3_triangle + time3_rectangle, time3], [0, velocity3, velocity3, 0], 'b-')
+        print("Time3: {0}[s] & Velocity3: {1}[deg/s]".format(time3, velocity3 * 180 / np.pi))
+
     time = time1 + time2 + time3
-    return time
+    maxradialvelocity = max(velocity1,velocity2,velocity3)
+    return time, maxradialvelocity
 
 Ixx = I_solarpanel[0][0]
 Iyy = I_solarpanel[1][1]
 Izz = I_solarpanel[2][2]
+Momentum = 0.1 #[Nms]
 Torque = 0.007 #[Nm]
-alpha = np.pi/180*0 #[rad]
-beta = np.pi/180*0 #[rad]
-gamma = np.pi/180*180 #[rad]
+alpha = np.pi/180*170 #[rad]
+beta = np.pi/180*180 #[rad]
+gamma = np.pi/180*360 #[rad]
 
-print("Total Time: ",AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,alpha,beta,gamma))
+print0,print1 = AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,Momentum,alpha,beta,gamma)
+print("Total Time: {0}[s] & Maximum Radial Velocity: {1}[deg/s]".format(print0,print1*180/np.pi))
+print("Momentum Velocities: {0}[deg/s], {1}[deg/s], {2}[deg/s]".format(Momentum/Ixx*180/np.pi,Momentum/Iyy*180/np.pi,Momentum/Izz*180/np.pi))
+plt.show()
