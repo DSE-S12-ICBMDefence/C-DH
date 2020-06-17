@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 #Mass in kg
 
 #mass = 19.94 #[kg] For CATIA
-mass = 24 #[kg]
+mass = 20 #[kg]
 
 #Dimensions of the 12U
 width = 23.94204 * 10**(-2) #[m]
@@ -23,8 +23,8 @@ print("MOI (just structure): ",I)
 #Moments of inertia with solar array
 
 #mass_solarpanel = 0.69 #[kg] for CATIA
-mass_solarpanel = 0.728 #[kg]
-area_solarpanel = 0.23 #[m^2]
+mass_solarpanel = 1.077 #[kg]
+area_solarpanel = 0.322 #[m^2]
 thickness_solarpanel = 3*10**(-3) #[m]
 height_solarpanel = area_solarpanel/2/width
 
@@ -69,8 +69,9 @@ def AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,Momentum,alpha,beta,gamma):
     else:
         accelaration2 = Torque/Iyy
         velocity2 = Momentum/Iyy
+        print(accelaration2,velocity2)
         time2_triangle = velocity2/accelaration2
-        time2_rectangle = (beta-time2_triangle/velocity2)/velocity2
+        time2_rectangle = (beta-time2_triangle*velocity2)/velocity2
         time2 = 2*time2_triangle+time2_rectangle
         plt.plot([0,time2_triangle,time2_triangle+time2_rectangle,time2],[0,velocity2,velocity2,0],'b-')
         print("Time2: {0}[s] & Velocity2: {1}[deg/s]".format(time2, velocity2 * 180 / np.pi))
@@ -101,10 +102,10 @@ Ixx = I_solarpanel[0][0]
 Iyy = I_solarpanel[1][1]
 Izz = I_solarpanel[2][2]
 Momentum = 0.1 #[Nms]
-Torque = 0.007 #[Nm]
-alpha = np.pi/180*170 #[rad]
-beta = np.pi/180*180 #[rad]
-gamma = np.pi/180*360 #[rad]
+Torque = 0.004 #[Nm]
+alpha = np.pi/180*23 #[rad]
+beta = np.pi/180*0 #[rad]
+gamma = np.pi/180*180 #[rad]
 
 print0,print1 = AttitudeDeterminationTime(Ixx,Iyy,Izz,Torque,Momentum,alpha,beta,gamma)
 print("Total Time: {0}[s] & Maximum Radial Velocity: {1}[deg/s]".format(print0,print1*180/np.pi))
